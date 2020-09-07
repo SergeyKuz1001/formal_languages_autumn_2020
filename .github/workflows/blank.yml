@@ -1,0 +1,15 @@
+name: CI
+on:
+  push:
+    branches: [ task1 ]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Docker container
+        run: docker build -t task1 .
+      - name: Test pygraphblas
+        run: docker run --rm task1 ./tests_run.sh tests_pygraphblas
+      - name: Test pyformlang
+        run: docker run --rm task1 ./tests_run.sh tests_pyformlang
