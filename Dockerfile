@@ -16,4 +16,6 @@ FROM graphblas/pygraphblas-minimal:3.4.0
 RUN pip3 install pyformlang
 WORKDIR /
 COPY main.py main.py
+COPY main_test.py main_test.py
 COPY src/ src/
+COPY tests/ tests/

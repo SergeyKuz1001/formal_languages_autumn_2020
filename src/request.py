@@ -22,8 +22,8 @@ from typing import Any, Dict, Set, Tuple, Optional, Iterable
 from functools import reduce
 from math import log2
 import operator
+import os
 
-Config = Dict[str, Any]
 Vertex = int
 
 class Request:
@@ -65,7 +65,9 @@ class Request:
                 if reachability_matrix.get(V_from, V_to, False):
                     res.add((V_from, V_to))
         # input/output vertexes for data base
-        res = set(map(lambda pair: tuple(map(lambda V: V // query.size, pair)), res))
+        res = set(map(
+                    lambda pair: tuple(map(lambda V: V // query.size, pair)),
+                    res))
         return res
 
     @classmethod
@@ -76,13 +78,17 @@ class Request:
             Ss = list(map(Symbol, _Ss))
             res._data_base = DataBase.from_lists(Vs_from, Vs_to, Ss)
         elif 'data_base_file' in config:
-            res._data_base = DataBase.from_file(config['data_base_file'])
+            data_base_file = config['data_base_file'] if config.path is None \
+                else os.path.join(config.path, config['data_base_file'])
+            res._data_base = DataBase.from_file(data_base_file)
         else:
             raise KeyError('config hasn\'t data base definition')
         if 'query_regex' in config:
             res._query = Query.from_regex(config['query_regex'])
         elif 'query_file' in config:
-            res._query = Query.from_file(config['query_file'])
+            query_file = config['query_file'] if config.path is None \
+                else os.path.join(config.path, config['query_file'])
+            res._query = Query.from_file(query_file)
         else:
             raise KeyError('config hasn\'t query definition')
         if 'input_vertexes' in config:
@@ -94,3 +100,7 @@ class Request:
         else:
             res._db_Vs_to = set(range(res._data_base.count_vertexes))
         return res
+
+    @classmethod
+    def from_dict(cls, _dict: Dict[str, Any]) -> "Request":
+        return cls.from_config(_dict)

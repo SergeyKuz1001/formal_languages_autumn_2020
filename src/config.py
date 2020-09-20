@@ -12,12 +12,14 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 import json
+import os
 
 class Config:
     def __init__(self):
         self._dict: Dict[str, Any] = dict()
+        self._path: Optional[str] = None
 
     def __contains__(self, key: str) -> bool:
         return key in self._dict
@@ -25,13 +27,23 @@ class Config:
     def __getitem__(self, key: str) -> Any:
         return self._dict.get(key)
 
+    @property
+    def path(self):
+        return self._path
+
+    @classmethod
+    def from_dict(cls, _dict: Dict[str, Any]) -> "Config":
+        res = Config()
+        if 'config' in _dict:
+            res._path = os.path.dirname(os.path.abspath(_dict['config']))
+            with open(_dict['config'], 'r') as config_file:
+                res._dict = json.load(config_file)
+        if 'data_base' in _dict:
+            res._dict['data_base_file'] = _dict['data_base']
+        if 'query' in _dict:
+            res._dict['query_file'] = _dict['query']
+        return res
+
     @classmethod
     def from_args(cls, args) -> "Config":
-        res = Config()
-        if args.config != None:
-            res._dict = json.load(args.config)
-        if args.data_base != None:
-            res._dict['data_base_file'] = args.data_base
-        if args.query != None:
-            res._dict['query_file'] = args.query
-        return res
+        return cls.from_dict(vars(args))
