@@ -12,52 +12,53 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from src import Config, Request
+from src import Request, DataBase, Query
 
+from typing import Tuple
+from functools import reduce
 import pytest
 import os
 import json
 import random
+import operator
 
-TEST_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tests')
+TEST_DIR = os.path.join(os.path.dirname(
+        os.path.abspath(__file__)),
+        'refinedDataForRPQ'
+    )
+# uncomment one of this string
+# I had tested really so because didn't want to take much memory
+#DATA_BASE_SETS = ['LUBM300']
+#DATA_BASE_SETS = ['LUBM500']
+#DATA_BASE_SETS = ['LUBM1M']
+#DATA_BASE_SETS = ['LUBM1.5M']
+#DATA_BASE_SETS = ['LUBM1.9M']
+DATA_BASE_DIRS = [os.path.join(TEST_DIR, data_base_set)
+        for data_base_set in DATA_BASE_SETS]
+DATA_BASE_FILES = [os.path.join(DATA_BASE_DIRS[i], DATA_BASE_SETS[i] + '.txt')
+        for i in range(len(DATA_BASE_SETS))]
+DATA_BASES = list(map(DataBase.from_file, DATA_BASE_FILES))
+DATA_BASE_QUERIES = [os.path.join(data_base_dir, 'regexes')
+        for data_base_dir in DATA_BASE_DIRS]
+TEST_SETS = reduce(operator.add,
+        [
+            list(enumerate(map(
+                lambda query_file:
+                    (
+                        DATA_BASES[i],
+                        os.path.join(DATA_BASE_QUERIES[i], query_file)
+                    ),
+                os.listdir(DATA_BASE_QUERIES[i])
+            )))
+            for i in range(len(DATA_BASE_SETS))
+        ]
+    )
 
-@pytest.mark.parametrize('dir_name', os.listdir(TEST_DIR))
-def test_small_test(dir_name):
-    test_dir_name = os.path.join(TEST_DIR, dir_name)
-    _dict = dict()
-    for file_name, dest_name in [('config.json', 'config'),
-                                 ('data_base.txt', 'data_base'),
-                                 ('query.txt', 'query')]:
-        full_file_name = os.path.join(test_dir_name, file_name)
-        if os.path.exists(full_file_name):
-            _dict[dest_name] = full_file_name
-    config = Config.from_dict(_dict)
-    request = Request.from_config(config)
-    result = request.result()
-    with open(os.path.join(test_dir_name, 'answer.json'), 'r') as answer_file:
-        answer = set(map(tuple, json.load(answer_file)))
-    assert result == answer
-
-@pytest.mark.parametrize(('count_vertexes', 'regex'), [(count_vertexes, regex)
-                for count_vertexes in [10, 40, 160]
-                for regex in ['a | b', 'a* (b | $)', '(a | b) . (b* | a b)']])
-def test_big_test(count_vertexes, regex):
-    count_edges = random.randint(0, count_vertexes ** 2)
-    I = [random.randint(0, count_vertexes) for _ in range(count_edges)]
-    J = [random.randint(0, count_vertexes) for _ in range(count_edges)]
-    V = [random.choice(['a', 'b', 'c']) for _ in range(count_edges)]
-    max_count_input_vertexes = random.randint(0, count_vertexes)
-    max_count_output_vertexes = random.randint(0, count_vertexes)
-    input_vertexes = list({random.randint(0, count_vertexes)
-        for _ in range(max_count_input_vertexes)})
-    output_vertexes = list({random.randint(0, count_vertexes)
-        for _ in range(max_count_output_vertexes)})
-    request = Request.from_dict({'data_base_lists': [I, V, J],
-                                 'query_regex': regex,
-                                 'input_vertexes': input_vertexes,
-                                 'output_vertexes': output_vertexes})
-    result = request.result()
-    for V_from, _ in result:
-        assert V_from in input_vertexes
-    for _, V_to in result:
-        assert V_to in output_vertexes
+@pytest.mark.parametrize('test_set', TEST_SETS)
+def test(test_set):
+    test_num, (data_base, query_file) = test_set
+    request = Request()
+    request.data_base = data_base
+    request.query = Query.from_file(query_file)
+    print(test_num, query_file, request.count_reachable_pairs())
+    assert True

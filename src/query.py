@@ -26,10 +26,11 @@ class Query:
         self._matrices: Dict[Symbol, Matrix] = dict()
         self._start_V: Optional[Vertex] = None
         self._final_Vs: Set[Vertex] = set()
+        self._count_Vs: int = 0
 
     @property
-    def size(self) -> int:
-        return list(self._matrices.values())[0].ncols
+    def count_vertexes(self) -> int:
+        return self._count_Vs
 
     @property
     def start_vertex(self) -> Vertex:
@@ -60,6 +61,7 @@ class Query:
         res._matrices = cls._dfa_dict_to_matrices(dfa.to_dict(), Q_to_V)
         res._start_V = Q_to_V[dfa.start_state]
         res._final_Vs = set(map(Q_to_V.get, dfa.final_states))
+        res._count_Vs = len(Q_to_V)
         return res
 
     @classmethod

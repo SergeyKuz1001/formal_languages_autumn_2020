@@ -23,6 +23,9 @@ class DataBase:
         self._matrices: Dict[Symbol, Matrix] = dict()
         self._count_Vs: int = 0
 
+    def __str__(self) -> str:
+        return 'DataBase[' + str(self._count_Vs) + ']'
+
     @property
     def count_vertexes(self) -> int:
         return self._count_Vs

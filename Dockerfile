@@ -12,10 +12,11 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-FROM graphblas/pygraphblas-minimal:3.4.0
+FROM graphblas/pygraphblas-minimal:v3.3.3
 RUN pip3 install pyformlang
 WORKDIR /
-COPY main.py main.py
+COPY refinedDataForRPQ.zip refinedDataForRPQ.zip
 COPY main_test.py main_test.py
-COPY src/ src/
 COPY tests/ tests/
+COPY main.py main.py
+COPY src/ src/
