@@ -1,5 +1,0 @@
-{
-    "data_base_lists": [[0,0,1,2,2], ["a","b","a","a","b"], [1,2,0,0,1]],
-    "query_regex": "a* b",
-    "output_vertexes": [2]
-}
