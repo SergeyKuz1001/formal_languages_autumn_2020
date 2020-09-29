@@ -17,4 +17,6 @@ from src.data_base import DataBase
 from src.config import Config
 from src.query import Query
 from src.regularQuery import RegularQuery
+from src.contextFreeQuery import ContextFreeQuery
 import src.rpq
+import src.cfpq

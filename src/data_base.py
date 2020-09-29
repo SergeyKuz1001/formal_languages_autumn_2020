@@ -14,7 +14,7 @@
 
 from pyformlang.finite_automaton import Symbol
 from pygraphblas import Matrix, types
-from typing import Dict, List, Iterable
+from typing import Dict, List, Iterable, Tuple
 
 Vertex = int
 
@@ -37,6 +37,13 @@ class DataBase:
     @property
     def matrices(self) -> Dict[Symbol, Matrix]:
         return self._matrices
+
+    def edges(self) -> List[Tuple[Vertex, Symbol, Vertex]]:
+        return [
+            (i, S, j)
+            for S in self.symbols
+            for i, j, _ in self.matrices[S]
+          ]
 
     @classmethod
     def from_matrices(cls, matrices: Dict[Symbol, Matrix]) -> "DataBase":

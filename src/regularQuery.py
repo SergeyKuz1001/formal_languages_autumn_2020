@@ -53,11 +53,11 @@ class RegularQuery(Query):
         return self._matrices
 
     @classmethod
-    def from_regex(cls, regex: str) -> "Query":
+    def from_regex(cls, regex: str) -> "RegularQuery":
         return cls.from_dfa(Regex(regex.strip()).to_epsilon_nfa().minimize())
 
     @classmethod
-    def from_dfa(cls, dfa: DFA) -> "Query":
+    def from_dfa(cls, dfa: DFA) -> "RegularQuery":
         Q_to_V = { Q: V for V, Q in enumerate(dfa.states) }
         res = cls()
         res._matrices = cls._dfa_dict_to_matrices(dfa.to_dict(), Q_to_V)
@@ -67,7 +67,7 @@ class RegularQuery(Query):
         return res
 
     @classmethod
-    def from_file(cls, path: str) -> "Query":
+    def from_file(cls, path: str) -> "RegularQuery":
         with open(path, 'r') as input_file:
             line = input_file.readline()
         return cls.from_regex(line)

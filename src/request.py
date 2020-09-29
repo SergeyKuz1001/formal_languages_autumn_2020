@@ -15,6 +15,7 @@
 from .data_base import DataBase
 from .query import Query
 from .regularQuery import RegularQuery
+from .contextFreeQuery import ContextFreeQuery
 from .config import Config
 
 from typing import List, Optional, Set, Tuple, Union
@@ -36,6 +37,8 @@ class Request:
                ) -> Union[bool, Set[Tuple[Vertex, Vertex]]]:
         if isinstance(self.query, RegularQuery):
             return self.rpq(return_only_number_of_pairs)
+        elif isinstance(self.query, ContextFreeQuery):
+            return self.cfpq(return_only_number_of_pairs)
 
     @property
     def data_base(self) -> Optional[DataBase]:
