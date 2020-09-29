@@ -14,24 +14,28 @@
 
 from .data_base import DataBase
 from .query import Query
+from .regularQuery import RegularQuery
 from .config import Config
 
-from pyformlang.finite_automaton import Symbol
-from pygraphblas import Matrix, types, semiring
-from typing import Any, Dict, List, Set, Tuple, Optional, Iterable
-from functools import reduce
-from math import log2
-import operator
+from typing import List, Optional, Set, Tuple, Union
 import os
 
 Vertex = int
 
 class Request:
-    def __init__(self, data_base: DataBase = None, query: Query = None):
+    def __init__(self,
+                 data_base: Optional[DataBase] = None,
+                 query: Optional[Query] = None
+                ) -> None:
         self._data_base: Optional[DataBase] = data_base
-        self._db_Vs_from: Optional[List[Vertex]] = list()
-        self._db_Vs_to: Optional[List[Vertex]] = list()
+        self._db_Vs_from: Optional[List[Vertex]] = None
+        self._db_Vs_to: Optional[List[Vertex]] = None
         self._query: Optional[Query] = query
+
+    def execute(self, return_only_number_of_pairs: bool = False
+               ) -> Union[bool, Set[Tuple[Vertex, Vertex]]]:
+        if isinstance(self.query, RegularQuery):
+            return self.rpq(return_only_number_of_pairs)
 
     @property
     def data_base(self) -> Optional[DataBase]:
@@ -42,81 +46,28 @@ class Request:
         self._data_base = value
 
     @property
+    def input_vertexes(self) -> Optional[List[Vertex]]:
+        return self._db_Vs_from
+
+    @input_vertexes.setter
+    def input_vertexes(self, value: List[Vertex]) -> None:
+        self._db_Vs_from = value
+
+    @property
+    def output_vertexes(self) -> Optional[List[Vertex]]:
+        return self._db_Vs_to
+
+    @output_vertexes.setter
+    def output_vertexes(self, value: List[Vertex]) -> None:
+        self._db_Vs_to = value
+
+    @property
     def query(self) -> Optional[Query]:
         return self._query
 
     @query.setter
     def query(self, value: Query) -> None:
         self._query = value
-
-    def tensor_product_of_data_base_and_query(self) -> Dict[Symbol, Matrix]:
-        intersection_matrices: Dict[Symbol, Matrix] = {
-              S: self.data_base.matrices[S].kronecker(self.query.matrices[S])
-              for S in self.data_base.symbols & self.query.symbols
-            }
-        return intersection_matrices
-
-    def reachability_matrix_for_one_step(self) -> Matrix:
-        intersection_matrices = self.tensor_product_of_data_base_and_query()
-        reachability_matrix_for_one_step: Matrix = \
-                reduce(operator.add, intersection_matrices.values())
-        return reachability_matrix_for_one_step
-
-    def reachability_matrix(self) -> Matrix:
-        reachability_matrix_for_one_step = \
-                self.reachability_matrix_for_one_step()
-        prev_nvals = 0
-        reachability_matrix: Matrix = reachability_matrix_for_one_step
-        while reachability_matrix.nvals != prev_nvals:
-            prev_nvals = reachability_matrix.nvals
-            reachability_matrix += \
-                    reachability_matrix @ reachability_matrix
-# ... or ...
-#                   reachability_matrix @ reachability_matrix_for_one_step
-        return reachability_matrix
-
-    def count_reachable_pairs(self) -> int:
-        return self.reachability_matrix().nvals
-
-    def input_vertexes(self) -> Tuple[List[Vertex], List[Vertex]]:
-        if self._db_Vs_from is None:
-            Vs_from = list(range(self.data_base.count_vertexes))
-        else:
-            Vs_from = self._db_Vs_from
-        return (
-            list(map(
-                lambda x:
-                    x * self.query.count_vertexes + self.query.start_vertex,
-                Vs_from)),
-            Vs_from
-          )
-
-    def output_vertexes(self) -> Tuple[List[Vertex], List[Vertex]]:
-        if self._db_Vs_to is None:
-            Vs_to = list(range(self.data_base.count_vertexes))
-        else:
-            Vs_to = self._db_Vs_to
-        return list(map(list, zip(*[
-                (
-                    data_base_V_to * self.query.count_vertexes + query_final_V,
-                    data_base_V_to
-                )
-                for data_base_V_to in Vs_to
-                for query_final_V in self.query.final_vertexes
-            ])))
-
-    def reachable_pairs(self) -> Set[Tuple[Vertex, Vertex]]:
-        reachability_matrix = self.reachability_matrix()
-        tensor_product_input_vertexes, data_base_input_vertexes = \
-                self.input_vertexes()
-        tensor_product_output_vertexes, data_base_output_vertexes = \
-                self.output_vertexes()
-        return {
-                   (data_base_input_vertexes[i], data_base_output_vertexes[j])
-                   for i, j, _ in reachability_matrix.extract_matrix(
-                       tensor_product_input_vertexes,
-                       tensor_product_output_vertexes)
-               }
 
     @classmethod
     def from_config(cls, config: Config) -> "Request":
