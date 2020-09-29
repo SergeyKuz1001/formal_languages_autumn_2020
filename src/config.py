@@ -34,16 +34,25 @@ class Config:
     @classmethod
     def from_dict(cls, _dict: Dict[str, Any]) -> "Config":
         res = Config()
-        if 'config' in _dict:
-            res._path = os.path.dirname(os.path.abspath(_dict['config']))
-            with open(_dict['config'], 'r') as config_file:
-                res._dict = json.load(config_file)
-        if 'data_base' in _dict:
-            res._dict['data_base_file'] = _dict['data_base']
-        if 'query' in _dict:
-            res._dict['query_file'] = _dict['query']
+        res._dict = _dict
         return res
 
     @classmethod
     def from_args(cls, args) -> "Config":
-        return cls.from_dict(vars(args))
+        args_dict = vars(args)
+        res = Config()
+        if 'config' in args_dict:
+            res = cls.from_file(args_dict['config'])
+        if 'data_base' in args_dict:
+            res._dict['data_base_file'] = args_dict['data_base']
+        if 'query' in args_dict:
+            res._dict['query_file'] = args_dict['query']
+        return res
+
+    @classmethod
+    def from_file(cls, path: str) -> "Config":
+        res = Config()
+        res._path = os.path.dirname(os.path.abspath(path))
+        with open(path, 'r') as config_file:
+            res._dict = json.load(config_file)
+        return res

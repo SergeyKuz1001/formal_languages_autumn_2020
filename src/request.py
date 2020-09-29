@@ -27,11 +27,11 @@ import os
 Vertex = int
 
 class Request:
-    def __init__(self):
-        self._data_base: Optional[DataBase] = None
+    def __init__(self, data_base: DataBase = None, query: Query = None):
+        self._data_base: Optional[DataBase] = data_base
         self._db_Vs_from: Optional[List[Vertex]] = list()
         self._db_Vs_to: Optional[List[Vertex]] = list()
-        self._query: Optional[Query] = None
+        self._query: Optional[Query] = query
 
     @property
     def data_base(self) -> Optional[DataBase]:
@@ -150,7 +150,3 @@ class Request:
         else:
             res._db_Vs_to = None
         return res
-
-    @classmethod
-    def from_dict(cls, _dict: Dict[str, Any]) -> "Request":
-        return cls.from_config(_dict)
