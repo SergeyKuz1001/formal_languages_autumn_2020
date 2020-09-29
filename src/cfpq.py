@@ -25,29 +25,37 @@ def cfpq(self,return_only_number_of_pairs: bool = False
         {
             (N, v, u)
             for v, S, u in self.data_base.edges()
-            for N in self.query.simple_antiproduction[Terminal(S.value)]
-        } + \
-        {
-            (self.start_symbol, v, v)
-            for v in self.data_base.count_vertexes
-        } if self.generate_epsilon else {}
+            for N in self.query.simple_antiproductions[Terminal(S.value)]
+        } | \
+        ({
+            (self.query.start_symbol, v, v)
+            for v in range(self.data_base.count_vertexes)
+        } if self.query.generate_epsilon else set())
     m = r.copy()
-    query_complex_antiproduction = self.query.complex_antiproduction
+    r_new = r.copy()
+    query_complex_antiproductions = self.query.complex_antiproductions
     while m != set():
         N_i, v, u = m.pop()
         for N_j, w, v_ in r:
             if v == v_:
-                for N_k in query_complex_antiproduction.get((N_j, N_i), set()):
+                for N_k in query_complex_antiproductions.get((N_j, N_i), set()):
                     if (N_k, w, u) not in r:
                         m.add((N_k, w, u))
-                        r.add((N_k, w, u))
+                        r_new.add((N_k, w, u))
         for N_j, u_, w in r:
             if u_ == u:
-                for N_k in query_complex_antiproduction.get((N_i, N_j), set()):
+                for N_k in query_complex_antiproductions.get((N_i, N_j), set()):
                     if (N_k, v, w) not in r:
                         m.add((N_k, v, w))
-                        r.add((N_k, v, w))
-    ans = filter(lambda t: t[0] == self.query.start_symbol, r)
+                        r_new.add((N_k, v, w))
+        r = r_new.copy()
+    ans = map(
+            lambda t: (t[1], t[2]),
+            filter(
+                    lambda t: t[0] == self.query.start_symbol,
+                    r
+                )
+        )
     if return_only_number_of_pairs:
         return len(ans)
     else:
