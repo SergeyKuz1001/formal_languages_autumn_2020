@@ -45,8 +45,11 @@ class Config:
             res = cls.from_file(args_dict['config'])
         if 'data_base' in args_dict:
             res._dict['data_base_file'] = args_dict['data_base']
-        if 'query' in args_dict:
-            res._dict['query_file'] = args_dict['query']
+        if 'regular_query' in args_dict:
+            res._dict['regular_query_file'] = args_dict['regular_query']
+        if 'context_free_query' in args_dict:
+            res._dict['context_free_query_file'] = \
+                    args.dict['context_free_query']
         return res
 
     @classmethod

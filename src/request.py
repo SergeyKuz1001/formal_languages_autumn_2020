@@ -86,13 +86,21 @@ class Request:
             res._data_base = DataBase.from_file(data_base_file)
         else:
             raise KeyError('config hasn\'t data base definition')
-        if 'query_regex' in config:
-            res._query = Query.from_regex(config['query_regex'])
-        elif 'query_file' in config:
-            query_file = config['query_file'] \
+        if 'regular_query_regex' in config:
+            res._query = RegularQuery.from_regex(config['regular_query_regex'])
+        elif 'regular_query_file' in config:
+            regular_query_file = config['regular_query_file'] \
                 if config.path is None \
-                else os.path.join(config.path, config['query_file'])
-            res._query = Query.from_file(query_file)
+                else os.path.join(config.path, config['regular_query_file'])
+            res._query = RegularQuery.from_file(regular_query_file)
+        elif 'context_free_query_text' in config:
+            res._query = ContextFreeQuery.from_text(
+                    config['context_free_query_text'])
+        elif 'context_free_query_file' in config:
+            context_free_query_file = config['context_free_query_file'] \
+              if config.path is None \
+              else os.path.join(config.path, config['context_free_query_file'])
+            res._query = ContextFreeQuery.from_file(context_free_query_file)
         else:
             raise KeyError('config hasn\'t query definition')
         if 'input_vertexes' in config:

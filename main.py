@@ -22,16 +22,19 @@ def main():
     parser = ArgumentParser()
     parser.add_argument("-c", "--config", metavar = "file", type = str,
                         dest = "config", help = "json configuration file")
-    parser.add_argument("-q", "--query", metavar = "file", type = str,
-                        dest = "query",
+    parser.add_argument("--rq", "--regular-query", metavar = "file",
+                        type = str, dest = "regular_query",
                         help = "file with query as regular expression")
+    parser.add_argument("--cfq", "--context-free-query", metavar = "file",
+                        type = str, dest = "context_free_query",
+                        help = "file with query as context free grammar")
     parser.add_argument("-d", "--data-base", metavar = "file", type = str,
                         dest = "data_base",
                         help = "file with description of data base")
     args = parser.parse_args()
     config = Config.from_args(args)
     request = Request.from_config(config)
-    print(request.result())
+    print(request.execute())
 
 if __name__ == "__main__":
     main()
