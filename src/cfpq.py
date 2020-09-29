@@ -25,24 +25,25 @@ def cfpq(self,return_only_number_of_pairs: bool = False
         {
             (N, v, u)
             for v, S, u in self.data_base.edges()
-            for N in self.query._simple_APs[Terminal(S.value)]
+            for N in self.query.simple_antiproduction[Terminal(S.value)]
         } + \
         {
             (self.start_symbol, v, v)
             for v in self.data_base.count_vertexes
         } if self.generate_epsilon else {}
     m = r.copy()
+    query_complex_antiproduction = self.query.complex_antiproduction
     while m != set():
         N_i, v, u = m.pop()
         for N_j, w, v_ in r:
             if v == v_:
-                for N_k in self.query._complex_APs.get((N_j, N_i), set()):
+                for N_k in query_complex_antiproduction.get((N_j, N_i), set()):
                     if (N_k, w, u) not in r:
                         m.add((N_k, w, u))
                         r.add((N_k, w, u))
         for N_j, u_, w in r:
             if u_ == u:
-                for N_k in self.query._complex_APs.get((N_i, N_j), set()):
+                for N_k in query_complex_antiproduction.get((N_i, N_j), set()):
                     if (N_k, v, w) not in r:
                         m.add((N_k, v, w))
                         r.add((N_k, v, w))

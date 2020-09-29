@@ -18,5 +18,6 @@ from src.config import Config
 from src.query import Query
 from src.regularQuery import RegularQuery
 from src.contextFreeQuery import ContextFreeQuery
+from src.cyk import cyk
 import src.rpq
 import src.cfpq
