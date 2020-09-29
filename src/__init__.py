@@ -12,10 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-FROM graphblas/pygraphblas-minimal:3.4.0
-RUN pip3 install pyformlang
-WORKDIR /
-COPY main.py main.py
-COPY main_test.py main_test.py
-COPY src/ src/
-COPY tests/ tests/
+from src.request import Request
+from src.data_base import DataBase
+from src.config import Config
+from src.query import Query
