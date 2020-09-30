@@ -42,12 +42,12 @@ def test_small_test(dir_name):
                 for count_vertexes in [10, 40, 160]
                 for regex in ['a | b', 'a* (b | $)', '(a | b) . (b* | a b)']])
 def test_big_test(count_vertexes, regex):
-    count_edges = random.randint(0, count_vertexes ** 2)
+    count_edges = random.randint(1, count_vertexes ** 2)
     I = [random.randint(0, count_vertexes) for _ in range(count_edges)]
     J = [random.randint(0, count_vertexes) for _ in range(count_edges)]
     V = [random.choice(['a', 'b', 'c']) for _ in range(count_edges)]
-    max_count_input_vertexes = random.randint(0, count_vertexes)
-    max_count_output_vertexes = random.randint(0, count_vertexes)
+    max_count_input_vertexes = random.randint(1, count_vertexes)
+    max_count_output_vertexes = random.randint(1, count_vertexes)
     input_vertexes = list({random.randint(0, count_vertexes)
         for _ in range(max_count_input_vertexes)})
     output_vertexes = list({random.randint(0, count_vertexes)
