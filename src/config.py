@@ -43,10 +43,10 @@ class Config:
     @classmethod
     def from_args(cls, args: Dict[str, Any]) -> "Config":
         res = Config()
-        if 'config' in args:
+        if 'config' in args and not args['config'] is None:
             res = cls.from_file(args['config'])
         for arg_name in ['data_base', 'regular_query', 'context_free_query']:
-            if arg_name in args:
+            if arg_name in args and not args[arg_name] is None:
                 res._dict[arg_name + '_file'] = args[arg_name]
         return res
 
