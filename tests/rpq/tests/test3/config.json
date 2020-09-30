@@ -1,0 +1,6 @@
+{
+    "data_base_file": "db.txt",
+    "query_file": "r.txt",
+    "input_vertexes": [1,2,3],
+    "output_vertexes": [0,2]
+}

@@ -1,0 +1,4 @@
+{
+    "data_base_lists": [[0,0,1], ["a","b","a"], [1,2,0]],
+    "query_regex": "a"
+}
