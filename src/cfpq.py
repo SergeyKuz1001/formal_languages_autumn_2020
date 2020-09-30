@@ -19,7 +19,7 @@ from typing import Dict, Set, Optional, Tuple, Union
 
 Vertex = int
 
-def cfpq(self,return_only_number_of_pairs: bool = False
+def cfpq(self, return_only_number_of_pairs: bool = False
         ) -> Union[bool, Set[Tuple[Vertex, Vertex]]]:
     r: Set[Tuple[Variable, Vertex, Vertex]] = \
         {
@@ -56,6 +56,10 @@ def cfpq(self,return_only_number_of_pairs: bool = False
                     r
                 )
         )
+    if not self.input_vertexes is None:
+        ans = filter(lambda t: t[0] in self.input_vertexes, ans)
+    if not self.output_vertexes is None:
+        ans = filter(lambda t: t[1] in self.output_vertexes, ans)
     if return_only_number_of_pairs:
         return len(ans)
     else:

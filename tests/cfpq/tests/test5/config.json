@@ -1,0 +1,4 @@
+{
+    "context_free_query_text": "S -> b A b\nA ->\nA -> a\nA -> a S",
+    "data_base_lists": [[0,1,2,3], [1,2,3,1], ["a", "b", "a", "b"]]
+}

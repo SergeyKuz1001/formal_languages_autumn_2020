@@ -19,6 +19,7 @@ from .contextFreeQuery import ContextFreeQuery
 from .config import Config
 
 from typing import List, Optional, Set, Tuple, Union
+from pyformlang.finite_automaton import Symbol
 import os
 
 Vertex = int
@@ -76,7 +77,7 @@ class Request:
     def from_config(cls, config: Config) -> "Request":
         res = cls()
         if 'data_base_lists' in config:
-            Vs_from, _Ss, Vs_to = config['data_base_lists']
+            Vs_from, Vs_to, _Ss = config['data_base_lists']
             Ss = list(map(Symbol, _Ss))
             res._data_base = DataBase.from_lists(Vs_from, Vs_to, Ss)
         elif 'data_base_file' in config:

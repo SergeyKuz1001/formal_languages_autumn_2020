@@ -31,7 +31,7 @@ def main():
     parser.add_argument("-d", "--data-base", metavar = "file", type = str,
                         dest = "data_base",
                         help = "file with description of data base")
-    args = parser.parse_args()
+    args = vars(parser.parse_args())
     config = Config.from_args(args)
     request = Request.from_config(config)
     print(request.execute())

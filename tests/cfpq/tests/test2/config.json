@@ -1,0 +1,6 @@
+{
+    "data_base_file": "db.txt",
+    "context_free_query_file": "cfq.txt",
+    "input_vertexes": [0, 2],
+    "output_vertexes": [1, 3]
+}

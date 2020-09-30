@@ -79,10 +79,15 @@ class ContextFreeQuery(Query):
 
     @classmethod
     def from_file(cls, path: str) -> "ContextFreeQuery":
+        def my_insert(l, i, el):
+            l_ = l.copy()
+            l_.insert(i, el)
+            return l_
+
         with open(path, 'r') as input_file:
             lines = input_file.readlines()
         text = '\n'.join(map(
-            lambda line: ' '.join(line.split().insert(1, '->')),
+            lambda line: ' '.join(my_insert(line.split(), 1, '->')),
             lines
           ))
         return cls.from_text(text)

@@ -28,8 +28,11 @@ class Config:
         return self._dict.get(key)
 
     @property
-    def path(self):
+    def path(self) -> Optional[str]:
         return self._path
+
+    def to_dict(self) -> Dict[str, Any]:
+        return self._dict
 
     @classmethod
     def from_dict(cls, _dict: Dict[str, Any]) -> "Config":
@@ -38,18 +41,13 @@ class Config:
         return res
 
     @classmethod
-    def from_args(cls, args) -> "Config":
-        args_dict = vars(args)
+    def from_args(cls, args: Dict[str, Any]) -> "Config":
         res = Config()
-        if 'config' in args_dict:
-            res = cls.from_file(args_dict['config'])
-        if 'data_base' in args_dict:
-            res._dict['data_base_file'] = args_dict['data_base']
-        if 'regular_query' in args_dict:
-            res._dict['regular_query_file'] = args_dict['regular_query']
-        if 'context_free_query' in args_dict:
-            res._dict['context_free_query_file'] = \
-                    args.dict['context_free_query']
+        if 'config' in args:
+            res = cls.from_file(args['config'])
+        for arg_name in ['data_base', 'regular_query', 'context_free_query']:
+            if arg_name in args:
+                res._dict[arg_name + '_file'] = args[arg_name]
         return res
 
     @classmethod
