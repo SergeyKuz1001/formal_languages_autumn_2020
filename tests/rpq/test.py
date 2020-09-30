@@ -24,16 +24,16 @@ TEST_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tests')
 @pytest.mark.parametrize('dir_name', os.listdir(TEST_DIR))
 def test_small_test(dir_name):
     test_dir_name = os.path.join(TEST_DIR, dir_name)
-    _dict = dict()
+    args = dict()
     for file_name, dest_name in [('config.json', 'config'),
                                  ('data_base.txt', 'data_base'),
-                                 ('query.txt', 'query')]:
+                                 ('query.txt', 'regular_query')]:
         full_file_name = os.path.join(test_dir_name, file_name)
         if os.path.exists(full_file_name):
-            _dict[dest_name] = full_file_name
-    config = Config.from_dict(_dict)
+            args[dest_name] = full_file_name
+    config = Config.from_args(args)
     request = Request.from_config(config)
-    result = request.result()
+    result = request.execute()
     with open(os.path.join(test_dir_name, 'answer.json'), 'r') as answer_file:
         answer = set(map(tuple, json.load(answer_file)))
     assert result == answer
@@ -52,11 +52,16 @@ def test_big_test(count_vertexes, regex):
         for _ in range(max_count_input_vertexes)})
     output_vertexes = list({random.randint(0, count_vertexes)
         for _ in range(max_count_output_vertexes)})
-    request = Request.from_dict({'data_base_lists': [I, V, J],
-                                 'query_regex': regex,
-                                 'input_vertexes': input_vertexes,
-                                 'output_vertexes': output_vertexes})
-    result = request.result()
+    config = Config.from_dict(
+        {
+            'data_base_lists': [I, J, V],
+            'regular_query_regex': regex,
+            'input_vertexes': input_vertexes,
+            'output_vertexes': output_vertexes
+        }
+      )
+    request = Request.from_config(config)
+    result = request.execute()
     for V_from, _ in result:
         assert V_from in input_vertexes
     for _, V_to in result:

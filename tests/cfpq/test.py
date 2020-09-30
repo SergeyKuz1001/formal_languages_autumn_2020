@@ -14,7 +14,6 @@
 
 from src import Request, Config
 
-from argparse import Namespace
 import json
 import pytest
 import os
