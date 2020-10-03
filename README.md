@@ -2,6 +2,56 @@
 
 Repository for hometasks of the cource "Formal Languages"
 
+## Task4
+
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FSergeyKuz1001%2Fformal_languages_autumn_2020%2Fbadge%3Fref%3Dtask4&style=flat)](https://actions-badge.atrox.dev/SergeyKuz1001/formal_languages_autumn_2020/goto?ref=task4)
+
+Fourth hometask of the cource "Formal Languages"
+
+### Description
+
+I have united in this task previous tasks and add CYK and CFPQ. I have also updated
+old tests from previous tasks, so they can testing into updated program.
+
+### `main.py`
+
+```
+usage: main.py [-h] [-c file] [--rq file] [--cfq file] [-d file]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -c file, --config file
+                        json configuration file
+  --rq file, --regular-query file
+                        file with query as regular expression
+  --cfq file, --context-free-query file
+                        file with query as context free grammar
+  -d file, --data-base file
+                        file with description of data base
+```
+
+### Configuration file
+
+It is json file with such possible fields:
+
+ * `data_base_lists` - list of `V_from`s, `S`s and `V_to`s lists
+ * `data_base_file` - name of file with data base in the same directory as this configuration file
+ * `regular_query_regex` - string of regular expression
+ * `regular_query_file` - name of file with regular expression in the same directory as this
+configuration file
+ * `context_free_query_text` - string of productions `{head} -> {body}`, joined by '\n'
+ * `context_free_query_file` - name of file with lines of productions `{head} {body}`
+ * `input_vertexes`  - list of vertexes, from which will be start all paths in resulting set. In
+other words, all pairs in the resulting set will have first element from `input_vertexes` list
+ * `output_vertexes` - the same as `input_vertexes` but all paths will be finished in vertexes from
+`output_vertexes` list
+
+### Minimal working set
+
+1) `data_base_lists` or `data_base_file` in configuration file or data base file as argument
+2) `regular_query_regex`, `regular_query_file`, `context_free_query_text` or `context_free_query_text`
+   in configuration file or query file as argument `--rq` or `--cfq`
+
 ## Task2
 
 [![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FSergeyKuz1001%2Fformal_languages_autumn_2020%2Fbadge%3Fref%3Dtask2&style=flat)](https://actions-badge.atrox.dev/SergeyKuz1001/formal_languages_autumn_2020/goto?ref=task2)
