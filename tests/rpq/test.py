@@ -37,14 +37,19 @@ def test_small_test(dir_name):
         answer = set(map(tuple, json.load(answer_file)))
     assert result == answer
 
-@pytest.mark.parametrize(('count_vertexes', 'regex'), [(count_vertexes, regex)
-                for count_vertexes in [10, 40, 160]
-                for regex in ['a | b', 'a* (b | $)', '(a | b) . (b* | a b)']])
-def test_big_test(count_vertexes, regex):
-    count_edges = random.randint(1, count_vertexes ** 2)
-    I = [random.randint(0, count_vertexes - 1) for _ in range(count_edges)]
-    J = [random.randint(0, count_vertexes - 1) for _ in range(count_edges)]
+@pytest.mark.parametrize(('max_count_vertexes', 'regex'),
+            [
+                (max_count_vertexes, regex)
+                for max_count_vertexes in [10, 40, 160]
+                for regex in ['a | b', 'a* (b | $)', '(a | b) . (b* | a b)']
+            ])
+                #for regex in ['a | b']])
+def test_big_test(max_count_vertexes, regex):
+    count_edges = random.randint(1, max_count_vertexes ** 2)
+    I = [random.randint(0, max_count_vertexes - 1) for _ in range(count_edges)]
+    J = [random.randint(0, max_count_vertexes - 1) for _ in range(count_edges)]
     V = [random.choice(['a', 'b', 'c']) for _ in range(count_edges)]
+    count_vertexes = max(I + J) + 1
     max_count_input_vertexes = random.randint(1, count_vertexes)
     max_count_output_vertexes = random.randint(1, count_vertexes)
     input_vertexes = list({random.randint(0, count_vertexes - 1)

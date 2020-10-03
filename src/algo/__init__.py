@@ -12,9 +12,6 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from src.data_base import DataBase
-from src.config import Config
-from src.query import Query
-from src.regular_query import RegularQuery
-from src.context_free_query import ContextFreeQuery
-from src.algo import *
+from src.algo.cyk import cyk
+from src.algo.rpq import rpq
+from src.algo.cfpq import cfpq
