@@ -12,12 +12,11 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from src.request import Request
 from src.data_base import DataBase
 from src.config import Config
 from src.query import Query
-from src.regularQuery import RegularQuery
-from src.contextFreeQuery import ContextFreeQuery
+from src.regular_query import RegularQuery
+from src.context_free_query import ContextFreeQuery
 from src.cyk import cyk
-import src.rpq
-import src.cfpq
+from src.rpq import rpq
+from src.cfpq import cfpq

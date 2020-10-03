@@ -12,7 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from .contextFreeQuery import ContextFreeQuery
+from .config import Config
 
 from pyformlang.cfg import Terminal, Variable
 from pygraphblas import Matrix, types
@@ -32,7 +32,9 @@ class MyMatrix:
         i, j, k = key
         self._dict[k][i, j] = True
 
-def cyk(word: str, query: ContextFreeQuery) -> bool:
+def cyk(config: Config) -> bool:
+    word = config['word']
+    query = config['context_free_query']
     if word == '':
         return query.generate_epsilon
     for char in word:

@@ -12,7 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from src import Config, Request
+from src import Config, rpq
 
 import pytest
 import os
@@ -32,8 +32,7 @@ def test_small_test(dir_name):
         if os.path.exists(full_file_name):
             args[dest_name] = full_file_name
     config = Config.from_args(args)
-    request = Request.from_config(config)
-    result = request.execute()
+    result = rpq(config)
     with open(os.path.join(test_dir_name, 'answer.json'), 'r') as answer_file:
         answer = set(map(tuple, json.load(answer_file)))
     assert result == answer
@@ -60,8 +59,7 @@ def test_big_test(count_vertexes, regex):
             'output_vertexes': output_vertexes
         }
       )
-    request = Request.from_config(config)
-    result = request.execute()
+    result = rpq(config)
     for V_from, _ in result:
         assert V_from in input_vertexes
     for _, V_to in result:

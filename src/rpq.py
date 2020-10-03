@@ -12,7 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from .request import Request
+from .config import Config
 
 from pyformlang.finite_automaton import Symbol
 from pygraphblas import Matrix
@@ -22,12 +22,13 @@ import operator
 
 Vertex = int
 
-def rpq(self, return_only_number_of_pairs: bool = False
-       ) -> Union[bool, Set[Tuple[Vertex, Vertex]]]:
+def rpq(config: Config) -> Union[bool, Set[Tuple[Vertex, Vertex]]]:
+    data_base = config['data_base']
+    query = config['regular_query']
     # tensor product of data base and query
     intersection_matrices: Dict[Symbol, Matrix] = {
-        S: self.data_base.matrices[S].kronecker(self.query.matrices[S])
-        for S in self.data_base.symbols & self.query.symbols
+        S: data_base.matrices[S].kronecker(query.matrices[S])
+        for S in data_base.symbols & query.symbols
       }
     # reachability matrix for one step
     reachability_matrix_for_one_step: Matrix = \
@@ -42,33 +43,33 @@ def rpq(self, return_only_number_of_pairs: bool = False
     # ... or ...
     #           reachability_matrix @ reachability_matrix_for_one_step
     # number of reachable pairs
-    if return_only_number_of_pairs:
+    if 'return_number_of_pairs' in config and config['return_number_of_pairs']:
         return reachability_matrix.nvals
     # input vertexes
-    if self.input_vertexes is None:
-        Vs_from = list(range(self.data_base.count_vertexes))
+    if 'input_vertexes' not in config:
+        Vs_from = list(range(data_base.count_vertexes))
     else:
-        Vs_from = self.input_vertexes
+        Vs_from = config['input_vertexes']
     tensor_product_input_vertexes, data_base_input_vertexes = ( \
         list(map(
             lambda x:
-                x * self.query.count_vertexes + self.query.start_vertex,
+                x * query.count_vertexes + query.start_vertex,
             Vs_from)),
         Vs_from
       )
     # output vertexes
-    if self.output_vertexes is None:
-        Vs_to = list(range(self.data_base.count_vertexes))
+    if 'output_vertexes' not in config:
+        Vs_to = list(range(data_base.count_vertexes))
     else:
-        Vs_to = self.output_vertexes
+        Vs_to = config['output_vertexes']
     tensor_product_output_vertexes, data_base_output_vertexes = \
         list(map(list, zip(*[
             (
-                data_base_V_to * self.query.count_vertexes + query_final_V,
+                data_base_V_to * query.count_vertexes + query_final_V,
                 data_base_V_to
             )
             for data_base_V_to in Vs_to
-            for query_final_V in self.query.final_vertexes
+            for query_final_V in query.final_vertexes
         ])))
     # reachable pairs
     return {
@@ -77,5 +78,3 @@ def rpq(self, return_only_number_of_pairs: bool = False
                    tensor_product_input_vertexes,
                    tensor_product_output_vertexes)
            }
-
-Request.rpq = rpq

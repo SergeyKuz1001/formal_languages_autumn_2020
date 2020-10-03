@@ -12,28 +12,29 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from .request import Request
+from .config import Config
 
 from pyformlang.cfg import Terminal, Variable
 from typing import Dict, Set, Optional, Tuple, Union
 
 Vertex = int
 
-def cfpq(self, return_only_number_of_pairs: bool = False
-        ) -> Union[bool, Set[Tuple[Vertex, Vertex]]]:
+def cfpq(config: Config) -> Union[bool, Set[Tuple[Vertex, Vertex]]]:
+    data_base = config['data_base']
+    query = config['context_free_query']
     r: Set[Tuple[Variable, Vertex, Vertex]] = \
         {
             (N, v, u)
-            for v, S, u in self.data_base.edges()
-            for N in self.query.simple_antiproductions[Terminal(S.value)]
+            for v, S, u in data_base.edges()
+            for N in query.simple_antiproductions[Terminal(S.value)]
         } | \
         ({
-            (self.query.start_symbol, v, v)
-            for v in range(self.data_base.count_vertexes)
-        } if self.query.generate_epsilon else set())
+            (query.start_symbol, v, v)
+            for v in range(data_base.count_vertexes)
+        } if query.generate_epsilon else set())
     m = r.copy()
     r_new = r.copy()
-    query_complex_antiproductions = self.query.complex_antiproductions
+    query_complex_antiproductions = query.complex_antiproductions
     while m != set():
         N_i, v, u = m.pop()
         for N_j, w, v_ in r:
@@ -52,17 +53,15 @@ def cfpq(self, return_only_number_of_pairs: bool = False
     ans = map(
             lambda t: (t[1], t[2]),
             filter(
-                    lambda t: t[0] == self.query.start_symbol,
+                    lambda t: t[0] == query.start_symbol,
                     r
                 )
         )
-    if not self.input_vertexes is None:
-        ans = filter(lambda t: t[0] in self.input_vertexes, ans)
-    if not self.output_vertexes is None:
-        ans = filter(lambda t: t[1] in self.output_vertexes, ans)
-    if return_only_number_of_pairs:
+    if 'input_vertexes' in config:
+        ans = filter(lambda t: t[0] in config['input_vertexes'], ans)
+    if 'output_vertexes' in config:
+        ans = filter(lambda t: t[1] in config['output_vertexes'], ans)
+    if 'return_number_of_pairs' in config and config['return_number_of_pairs']:
         return len(ans)
     else:
         return set(ans)
-
-Request.cfpq = cfpq
