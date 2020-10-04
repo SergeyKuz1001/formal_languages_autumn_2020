@@ -32,5 +32,4 @@ def simple_test(test_dir: str,
     result = algo(config)
     with open(os.path.join(test_dir, 'answer.json'), 'r') as answer_file:
         answer = answer_from_json(json.load(answer_file))
-    return result == answer
-
+    assert result == answer

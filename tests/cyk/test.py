@@ -28,7 +28,7 @@ TEST_DIRS = list(map(
 
 @pytest.mark.parametrize('test_dir', TEST_DIRS)
 def test(test_dir):
-    assert simple_test(
+    simple_test(
             test_dir,
             [
                 ('config.json', 'config'),
