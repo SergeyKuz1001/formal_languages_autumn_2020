@@ -13,6 +13,7 @@
 #  limitations under the License.
 
 from .query import Query
+from .graph import Graph
 
 from pyformlang.finite_automaton import DeterministicFiniteAutomaton, \
                                         State, Symbol
@@ -23,16 +24,11 @@ from typing import Dict, Set, Optional
 DFA = DeterministicFiniteAutomaton
 Vertex = int
 
-class RegularQuery(Query):
+class RegularQuery(Query, Graph):
     def __init__(self) -> None:
-        self._matrices: Dict[Symbol, Matrix] = dict()
-        self._start_V: Optional[Vertex] = None
+        super().__init__()
         self._final_Vs: Set[Vertex] = set()
         self._count_Vs: int = 0
-
-    @property
-    def count_vertexes(self) -> int:
-        return self._count_Vs
 
     @property
     def start_vertex(self) -> Vertex:
@@ -43,14 +39,6 @@ class RegularQuery(Query):
     @property
     def final_vertexes(self) -> Set[Vertex]:
         return self._final_Vs
-
-    @property
-    def symbols(self) -> Set[Symbol]:
-        return set(self._matrices.keys())
-
-    @property
-    def matrices(self) -> Dict[Symbol, Matrix]:
-        return self._matrices
 
     @classmethod
     def from_regex(cls, regex: str) -> "RegularQuery":

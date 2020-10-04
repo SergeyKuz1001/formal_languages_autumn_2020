@@ -12,6 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+from src.graph import Graph
 from src.data_base import DataBase
 from src.config import Config
 from src.query import Query

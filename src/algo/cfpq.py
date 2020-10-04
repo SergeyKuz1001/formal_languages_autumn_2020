@@ -25,7 +25,7 @@ def cfpq(config: Config) -> Union[bool, Set[Tuple[Vertex, Vertex]]]:
     r: Set[Tuple[Variable, Vertex, Vertex]] = \
         {
             (N, v, u)
-            for v, S, u in data_base.edges()
+            for v, S, u in data_base.edges
             for N in query.simple_antiproductions[Terminal(S.value)]
         } | \
         ({
