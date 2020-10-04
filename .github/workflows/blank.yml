@@ -19,3 +19,5 @@ jobs:
         run: docker run --rm task4 python3 -m pytest tests/cyk/test.py
       - name: Test CFPQ
         run: docker run --rm task4 python3 -m pytest tests/cfpq/test.py
+      - name: Test CFPQ boolean matrix version
+        run: docker run --rm task4 python3 -m pytest tests/cfpq_bm/test.py
