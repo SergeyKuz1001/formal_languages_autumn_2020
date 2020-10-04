@@ -33,6 +33,6 @@ def test(dir_name):
             args[dest_name] = full_file_name
     config = Config.from_args(args)
     result = cyk(config)
-    with open(os.path.join(test_dir_name, 'answer.txt'), 'r') as answer_file:
-        answer = answer_file.readline().strip() == 't'
+    with open(os.path.join(test_dir_name, 'answer.json'), 'r') as answer_file:
+        answer = json.load(answer_file) == 't'
     assert result == answer
