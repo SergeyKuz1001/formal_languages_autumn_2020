@@ -12,30 +12,33 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from src import Config, rpq
+from src import rpq, Config
+from tests.simple_test import simple_test
 
+import json
 import pytest
 import os
-import json
 import random
 
-TEST_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tests')
+MAIN_TEST_DIR = \
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tests')
+TEST_DIRS = list(map(
+        lambda dir_name: os.path.join(MAIN_TEST_DIR, dir_name),
+        os.listdir(MAIN_TEST_DIR)
+    ))
 
-@pytest.mark.parametrize('dir_name', os.listdir(TEST_DIR))
-def test_small_test(dir_name):
-    test_dir_name = os.path.join(TEST_DIR, dir_name)
-    args = dict()
-    for file_name, dest_name in [('config.json', 'config'),
-                                 ('data_base.txt', 'data_base'),
-                                 ('query.txt', 'regular_query')]:
-        full_file_name = os.path.join(test_dir_name, file_name)
-        if os.path.exists(full_file_name):
-            args[dest_name] = full_file_name
-    config = Config.from_args(args)
-    result = rpq(config)
-    with open(os.path.join(test_dir_name, 'answer.json'), 'r') as answer_file:
-        answer = set(map(tuple, json.load(answer_file)))
-    assert result == answer
+@pytest.mark.parametrize('test_dir', TEST_DIRS)
+def test_small_test(test_dir):
+    assert simple_test(
+            test_dir,
+            [
+                ('config.json', 'config'),
+                ('data_base.txt', 'data_base'),
+                ('query.txt', 'regular_query')
+            ],
+            rpq,
+            lambda j: set(map(tuple, j))
+        )
 
 @pytest.mark.parametrize(('max_count_vertexes', 'regex'),
             [
