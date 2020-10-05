@@ -46,6 +46,26 @@ class Graph:
                 ]
         return self._edges
 
+    def __matmul__(self, other: "Graph") -> "Graph":
+        res_matrices: Dict[Symbol, Matrix] = {
+                S: self.matrices[S].kronecker(other.matrices[S])
+                for S in self.symbols & other.symbols
+            }
+        res = self.from_matrices(res_matrices)
+        return res
+
+    def transitive_closure(self) -> Matrix:
+        n = self.count_vertexes
+        if self.matrices != dict():
+            res: Matrix = reduce(operator.add, self.matrices.values())
+        else:
+            res: Matrix = Matrix.sparse(types.BOOL, n, n)
+        prev_nvals = 0
+        while res.nvals != prev_nvals:
+            prev_nvals = res.nvals
+            res += res @ res
+        return res
+
     @classmethod
     def from_matrices(cls, matrices: Dict[Symbol, Matrix]) -> "Graph":
         res = cls()
