@@ -23,7 +23,7 @@ Vertex = int
 
 def cfpq_bm(config: Config) -> Union[bool, Set[Tuple[Vertex, Vertex]]]:
     data_base = config['data_base']
-    query = config['context_free_query']
+    query = config['cnf_query']
     n = data_base.count_vertexes
     T: Dict[Variable, Matrix] = {
             A: Matrix.sparse(types.BOOL, n, n)

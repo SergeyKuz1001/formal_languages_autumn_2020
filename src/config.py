@@ -16,6 +16,7 @@ from .data_base import DataBase
 from .io_data_base import IODataBase
 from .regular_query import RegularQuery
 from .context_free_query import ContextFreeQuery
+from .cnf_query import CNFQuery
 from .ra_query import RAQuery
 
 from pyformlang.finite_automaton import Symbol
