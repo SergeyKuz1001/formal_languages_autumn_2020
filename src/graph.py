@@ -14,6 +14,8 @@
 
 from pyformlang.finite_automaton import Symbol
 from pygraphblas import Matrix, types
+from functools import reduce
+import operator
 from typing import Dict, List, Iterable, Tuple, Optional
 
 Vertex = int
@@ -23,6 +25,48 @@ class Graph:
         self._matrices: Dict[Symbol, Matrix] = dict()
         self._count_Vs: int = 0
         self._edges: Optional[List[Tuple[Vertex, Symbol, Vertex]]] = None
+
+    def __getitem__(self, key: Tuple[Vertex, Symbol, Vertex]) -> bool:
+        i, S, j = key
+        return S in self._matrices.keys() and self._matrices[S].get(i, j, False)
+
+    def __setitem__(self,
+                    key: Tuple[Vertex, Symbol, Vertex],
+                    value: bool
+                   ) -> None:
+        i, S, j = key
+        n = self._count_Vs
+        self._matrices.setdefault(S, Matrix.sparse(types.BOOL, n, n))
+        if value:
+            self._matrices[S][i, j] = True
+        else:
+            del self._matrices[S][i, j]
+
+    def __matmul__(self, other: "Graph") -> "Graph":
+        res_matrices: Dict[Symbol, Matrix] = {
+                S: self.matrices[S].kronecker(other.matrices[S])
+                for S in self.symbols & other.symbols
+            }
+        res = self.from_matrices(res_matrices)
+        return res
+
+    def transitive_closure(self) -> Matrix:
+        n = self.count_vertexes
+        if self.matrices != dict():
+            res: Matrix = reduce(operator.add, self.matrices.values())
+        else:
+            res: Matrix = Matrix.sparse(types.BOOL, n, n)
+        prev_nvals = 0
+        while res.nvals != prev_nvals:
+            prev_nvals = res.nvals
+            res += res @ res
+        return res
+
+    def copy(self) -> "Graph":
+        res = type(self)()
+        res._matrices = self._matrices.copy()
+        res._count_Vs = self._count_Vs
+        return res
 
     @property
     def count_vertexes(self) -> int:
@@ -45,26 +89,6 @@ class Graph:
                     for i, j, _ in self.matrices[S]
                 ]
         return self._edges
-
-    def __matmul__(self, other: "Graph") -> "Graph":
-        res_matrices: Dict[Symbol, Matrix] = {
-                S: self.matrices[S].kronecker(other.matrices[S])
-                for S in self.symbols & other.symbols
-            }
-        res = self.from_matrices(res_matrices)
-        return res
-
-    def transitive_closure(self) -> Matrix:
-        n = self.count_vertexes
-        if self.matrices != dict():
-            res: Matrix = reduce(operator.add, self.matrices.values())
-        else:
-            res: Matrix = Matrix.sparse(types.BOOL, n, n)
-        prev_nvals = 0
-        while res.nvals != prev_nvals:
-            prev_nvals = res.nvals
-            res += res @ res
-        return res
 
     @classmethod
     def from_matrices(cls, matrices: Dict[Symbol, Matrix]) -> "Graph":

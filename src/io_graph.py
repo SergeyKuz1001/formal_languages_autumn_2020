@@ -13,7 +13,6 @@
 #  limitations under the License.
 
 from .graph import Graph
-from .config import Config
 
 from pyformlang.finite_automaton import Symbol
 from pygraphblas import Matrix, types
@@ -27,6 +26,13 @@ class IOGraph(Graph):
         self._start_Vs: Set[Vertex] = set()
         self._final_Vs: Set[Vertex] = set()
         self._other_N: Optional[int] = None
+
+    def copy(self) -> "IOGraph":
+        res = super().copy()
+        res._start_Vs = self._start_Vs.copy()
+        res._final_Vs = self._final_Vs.copy()
+        res._other_N = self._other_N
+        return res
 
     @property
     def start_vertexes(self) -> Set[Vertex]:
@@ -53,16 +59,3 @@ class IOGraph(Graph):
 
     def vertex_to_pair(self, vertex: Vertex) -> Tuple[Vertex, Vertex]:
         return (vertex // self._other_N, vertex % self._other_N)
-    
-    @classmethod
-    def from_data_base_from_config(cls, config: Config) -> "IOGraph":
-        res = config['data_base']
-        if 'input_vertexes' in config:
-            res._start_Vs = config['input_vertexes']
-        else:
-            res._start_Vs = list(range(res.count_vertexes))
-        if 'output_vertexes' in config:
-            res._final_Vs = config['output_vertexes']
-        else:
-            res._final_Vs = list(range(res.count_vertexes))
-        return res
