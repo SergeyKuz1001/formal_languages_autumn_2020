@@ -27,6 +27,7 @@ Vertex = int
 class RegularQuery(Query, Graph):
     def __init__(self) -> None:
         super().__init__()
+        self._start_V: Optional[Vertex] = None
         self._final_Vs: Set[Vertex] = set()
         self._count_Vs: int = 0
 
