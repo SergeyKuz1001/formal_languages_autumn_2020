@@ -15,6 +15,7 @@
 from src.graph import Graph
 from src.data_base import DataBase
 from src.io_graph import IOGraph
+from src.io_data_base import IODataBase
 from src.config import Config
 from src.query import Query
 from src.regular_query import RegularQuery

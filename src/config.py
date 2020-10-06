@@ -28,13 +28,14 @@ class Config:
         self._path: Optional[str] = None
 
     def __contains__(self, item: str) -> bool:
-        if item == 'data_base':
+        if item == 'data_base' or item == 'io_data_base':
             return 'data_base_lists' in self._args or \
                     'data_base_file' in self._args
         elif item == 'regular_query':
             return 'regular_query_regex' in self._args or \
                     'regular_query_file' in self._args
-        elif item == 'context_free_query':
+        elif item == 'context_free_query' or \
+                item == 'cnf_query' or item == 'ra_query':
             return 'context_free_query_text' in self._args or \
                     'context_free_query_file' in self._args
         elif item == 'input_vertexes':
@@ -65,6 +66,21 @@ class Config:
                     self._objs[key] = DataBase.from_file(data_base_file)
                 else:
                     raise KeyError('Config hasn\'t data base definition')
+            elif key == 'io_data_base':
+                data_base = self['data_base']
+                if 'input_vertexes' in self:
+                    input_vertexes = self['input_vertexes']
+                else:
+                    input_vertexes = list(range(data_base.count_vertexes))
+                if 'output_vertexes' in self:
+                    output_vertexes = self['output_vertexes']
+                else:
+                    output_vertexes = list(range(data_base.count_vertexes))
+                self._objs[key] = IODataBase.from_db_and_io_vertexes(
+                        data_base,
+                        input_vertexes,
+                        output_vertexes
+                    )
             elif key == 'regular_query':
                 if 'regular_query_regex' in self._args:
                     self._objs[key] = RegularQuery.from_regex(
@@ -96,6 +112,12 @@ class Config:
                 else:
                     raise KeyError(
                             'Config hasn\'t context free query definition')
+            elif key == 'cnf_query':
+                self._objs[key] = CNFQuery.from_context_free_query(
+                        self['context_free_query'])
+            elif key == 'ra_query':
+                self._objs[key] = RAQuery.from_context_free_query(
+                        self['context_free_query'])
             elif key == 'input_vertexes':
                 if 'input_vertexes' in self._args:
                     self._objs[key] = list(self._args['input_vertexes'])
