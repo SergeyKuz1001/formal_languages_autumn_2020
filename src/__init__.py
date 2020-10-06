@@ -14,8 +14,10 @@
 
 from src.graph import Graph
 from src.data_base import DataBase
+from src.io_graph import IOGraph
 from src.config import Config
 from src.query import Query
 from src.regular_query import RegularQuery
 from src.context_free_query import ContextFreeQuery
-from src.algo import *
+from src.cnf_query import CNFQuery
+from src.ra_query import RAQuery
