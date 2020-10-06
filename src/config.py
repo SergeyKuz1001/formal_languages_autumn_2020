@@ -13,8 +13,10 @@
 #  limitations under the License.
 
 from .data_base import DataBase
+from .io_data_base import IODataBase
 from .regular_query import RegularQuery
 from .context_free_query import ContextFreeQuery
+from .ra_query import RAQuery
 
 from pyformlang.finite_automaton import Symbol
 from typing import Any, Dict, Optional
