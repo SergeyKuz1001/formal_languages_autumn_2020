@@ -51,11 +51,15 @@ class CNFQuery(ContextFreeQuery):
         return self._complex_Ps
 
     @classmethod
-    def from_text(cls, text: str) -> "CNFQuery":
-        res = super().from_text(text)
-        res._generate_eps = res._cfg.generate_epsilon()
-        res._cfg = res._cfg.to_normal_form()
+    def from_context_free_query(cls, cfq: ContextFreeQuery) -> "CNFQuery":
+        res = cls()
+        res._generate_eps = cfq._cfg.generate_epsilon()
+        res._cfg = cfq._cfg.to_normal_form()
         return res
+
+    @classmethod
+    def from_text(cls, text: str) -> "CNFQuery":
+        return cls.from_context_free_query(ContextFreeQuery.from_text(text))
 
     def _eval_APs(self) -> None:
         self._simple_APs = dict()

@@ -108,10 +108,9 @@ class RAQuery(ContextFreeQuery, IOGraph):
         return self._V_of_path_from[vertex]
 
     @classmethod
-    def from_text(cls, text: str) -> "RAQuery":
-        res = super().from_text(text)
-        res._start_Vs: Set[Vertex] = set()
-        res._final_Vs: Set[Vertex] = set()
+    def from_context_free_query(cls, cfq: ContextFreeQuery) -> "RAQuery":
+        res = cls()
+        res._cfg = cfq._cfg
         for production in res._cfg.productions:
             res._Ps.setdefault(production.head, set())
             res._Ps[production.head].add(tuple(production.body))
@@ -149,3 +148,7 @@ class RAQuery(ContextFreeQuery, IOGraph):
                 res._final_Vs.add(final_vertex + m)
             m += len(graph)
         return res
+
+    @classmethod
+    def from_text(cls, text: str) -> "RAQuery":
+        return cls.from_context_free_query(ContextFreeQuery.from_text(text))
