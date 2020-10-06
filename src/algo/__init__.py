@@ -16,3 +16,4 @@ from src.algo.cyk import cyk
 from src.algo.rpq import rpq
 from src.algo.cfpq import cfpq
 from src.algo.cfpq_bm import cfpq_bm
+from src.algo.cfpq_tp import cfpq_tp
