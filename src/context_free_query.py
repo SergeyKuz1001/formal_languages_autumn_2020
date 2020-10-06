@@ -19,6 +19,7 @@ from typing import Dict, Set, Optional, Tuple
 
 class ContextFreeQuery(Query):
     def __init__(self) -> None:
+        super().__init__()
         self._cfg: Optional[CFG] = None
         self._generate_eps: Optional[bool] = None
 
