@@ -21,7 +21,7 @@ Vertex = int
 
 def cfpq(config: Config) -> Union[bool, Set[Tuple[Vertex, Vertex]]]:
     data_base = config['data_base']
-    query = config['context_free_query']
+    query = config['cnf_query']
     r: Set[Tuple[Variable, Vertex, Vertex]] = \
         {
             (N, v, u)

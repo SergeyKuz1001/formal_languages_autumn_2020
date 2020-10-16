@@ -12,7 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from src import cyk
+from src.algo import cyk
 from tests.simple_test import simple_test
 
 import json

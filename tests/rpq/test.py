@@ -12,7 +12,8 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from src import rpq, Config
+from src.algo import rpq
+from src import Config
 from tests.simple_test import simple_test
 
 import json
