@@ -93,11 +93,7 @@ class ContextFreeQuery(Query):
     def _from_heads_and_regexes(cls, heads_and_regexes) -> str:
         result = ""
         for head, regex in heads_and_regexes:
-            #result += '\n'.join(cls._from_head_and_regex(head, regex)[1]) + '\n'
-            _, r = cls._from_head_and_regex(head, regex)
-            for l in r:
-                print(l)
-            result += '\n'.join(r) + '\n'
+            result += '\n'.join(cls._from_head_and_regex(head, regex)[1]) + '\n'
         return result
 
     @classmethod
