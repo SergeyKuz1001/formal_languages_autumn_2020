@@ -12,7 +12,7 @@ Sixth hometask of the cource "Formal Languages"
 
 ### Result
 
-Measurement data: `Results.txt`
+Measurement data: `Results.txt`  
 Report: `Report.pdf`
 
 ## Task5
