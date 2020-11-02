@@ -155,6 +155,13 @@ class Config:
                 raise KeyError('Config don\'t contain [' + key + '] key')
         return self._objs[key]
 
+    def copy(self) -> "Config":
+        res = type(self)()
+        res._args = self._args.copy()
+        res._objs = self._objs.copy()
+        res._path = self._path
+        return res
+
     @classmethod
     def from_dict(cls, args: Dict[str, Any]) -> "Config":
         res = Config()
