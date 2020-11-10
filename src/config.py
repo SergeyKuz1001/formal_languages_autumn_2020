@@ -16,6 +16,7 @@ from .data_base import DataBase
 from .io_data_base import IODataBase
 from .regular_query import RegularQuery
 from .context_free_query import ContextFreeQuery
+from .pretty_context_free_query import PrettyContextFreeQuery
 from .cnf_query import CNFQuery
 from .ra_query import RAQuery
 
@@ -41,6 +42,10 @@ class Config:
                 item == 'cnf_query' or item == 'ra_query':
             return 'context_free_query_text' in self._args or \
                     'context_free_query_file' in self._args
+        elif item == 'pretty_context_free_query' or \
+                item == 'pretty_cnf_query':
+            return 'pretty_context_free_query_text' in self._args or \
+                    'pretty_context_free_query_file' in self._args
         elif item == 'input_vertexes':
             return 'input_vertexes' in self._args
         elif item == 'output_vertexes':
@@ -121,6 +126,26 @@ class Config:
             elif key == 'ra_query':
                 self._objs[key] = RAQuery.from_context_free_query(
                         self['context_free_query'])
+            elif key == 'pretty_context_free_query':
+                if 'pretty_context_free_query_text' in self._args:
+                    self._objs[key] = PrettyContextFreeQuery.from_text(
+                            self._args['pretty_context_free_query_text'])
+                elif 'pretty_context_free_query_file' in self._args:
+                    if self._path is None:
+                        context_free_query_file = \
+                                self._args['pretty_context_free_query_file']
+                    else:
+                        context_free_query_file = os.path.join(
+                                self._path,
+                                self._args['pretty_context_free_query_file'])
+                    self._objs[key] = PrettyContextFreeQuery.from_file(
+                            context_free_query_file)
+                else:
+                    raise KeyError(
+                            'Config hasn\'t pretty context free query definition')
+            elif key == 'pretty_cnf_query':
+                self._objs[key] = CNFQuery.from_context_free_query(
+                        self['pretty_context_free_query'])
             elif key == 'input_vertexes':
                 if 'input_vertexes' in self._args:
                     self._objs[key] = list(self._args['input_vertexes'])
