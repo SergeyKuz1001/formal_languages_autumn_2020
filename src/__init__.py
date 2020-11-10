@@ -20,5 +20,6 @@ from src.config import Config
 from src.query import Query
 from src.regular_query import RegularQuery
 from src.context_free_query import ContextFreeQuery
+from src.pretty_context_free_query import PrettyContextFreeQuery
 from src.cnf_query import CNFQuery
 from src.ra_query import RAQuery
