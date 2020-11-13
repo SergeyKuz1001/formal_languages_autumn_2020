@@ -13,7 +13,8 @@ Seventh hometask of the cource "Formal Languages"
 You can run parser of query language through this command:
 
 ```
-# docker run --rm -i ./main.py -g query_lang.txt
+# docker build -t task7 .
+# docker run --rm -i task7 ./main.py -g query_lang.txt
 ```
 
 Now you can be typing your program. If you want to finish it, press `Ctrl-D`.
