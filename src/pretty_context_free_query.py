@@ -111,7 +111,6 @@ class PrettyContextFreeQuery(ContextFreeQuery):
             else:
                 new_text += text[i]
                 i += 1
-        print(new_text)
         return new_text
 
     @classmethod
@@ -135,7 +134,6 @@ class PrettyContextFreeQuery(ContextFreeQuery):
 
         pretty_productions = list(map(str, cfq._cfg.productions))
         pretty_productions.sort()
-        print('\n'.join(pretty_productions))
         new_productions = set(map(production_to_pretty, cfq._cfg.productions))
         new_cfg = CFG(productions = new_productions, start_symbol = Variable('S'))
         res = cls()

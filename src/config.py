@@ -202,6 +202,7 @@ class Config:
                         'data_base',
                         'regular_query',
                         'context_free_query',
+                        'pretty_context_free_query',
                         'word'
                         ]:
             if arg_name in args:
