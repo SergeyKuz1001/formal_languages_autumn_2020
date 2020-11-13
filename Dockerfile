@@ -17,3 +17,5 @@ RUN pip3 install pyformlang
 WORKDIR /
 COPY src/ src/
 COPY tests/ tests/
+COPY main.py main.py
+COPY query_lang.txt query_lang.txt
