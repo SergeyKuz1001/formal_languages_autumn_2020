@@ -18,18 +18,54 @@ from pyformlang.regular_expression import Regex, regex_objects
 from pyformlang.cfg import CFG, Terminal, Variable, Production
 from typing import Union
 
+pretty_dict = {
+        ' ': 'space',
+        '_': 'underscore',
+        '.': 'dot',
+        ',': 'comma',
+        '+': 'plus',
+        '-': 'minus',
+        '*': 'multiply',
+        '/': 'division',
+        '"': 'double_quotes',
+        '(': 'opening_parenthesis',
+        ')': 'closing_parenthesis',
+        '[': 'opening_square_bracket',
+        ']': 'closing_square_bracket',
+        '{': 'opening_brace',
+        '}': 'closing_brace',
+        '?': 'question_mark',
+        ':': 'colon',
+        '&': 'logical_and',
+        '|': 'logical_or'
+    }
+
+anti_pretty_dict = {s: c for c, s in pretty_dict.items()}
+
 class PrettyContextFreeQuery(ContextFreeQuery):
     def __init__(self) -> None:
         super().__init__()
+
+    @classmethod
+    def _to_pretty_term(cls, char: str) -> str:
+        if char in pretty_dict.keys():
+            return 't_' + pretty_dict[char]
+        return 't_' + char
+
+    @classmethod
+    def _from_pretty_term(cls, term: str) -> str:
+        if term[2:] in anti_pretty_dict.keys():
+            return anti_pretty_dict[term[2:]]
+        return term[2:]
 
     @classmethod
     def _from_pretty(cls, text: str) -> str:
         new_text = ""
         i = 0
         while i < len(text):
-            if text[i].isalpha():
+            if text[i].isalpha() or text[i] == '_' or text[i].isdigit():
                 j = i + 1
-                while j < len(text) and text[j].isalpha():
+                while j < len(text) and (text[j].isalpha() or text[j] == '_' or text[j].isdigit()):
                     j += 1
                 new_text += 'V_' + text[i:j]
                 i = j
@@ -42,12 +78,10 @@ class PrettyContextFreeQuery(ContextFreeQuery):
                 escape = False
                 for c in text[i:j]:
                     if not escape:
-                        if c == ' ':
-                            new_text += 't_space '
-                        elif c == '\\':
+                        if c == '\\':
                             escape = True
                         else:
-                            new_text += 't_' + c + ' '
+                            new_text += cls._to_pretty_term(c) + ' '
                     else:
                         if c == 'n':
                             new_text += 't_newline '
@@ -59,9 +93,25 @@ class PrettyContextFreeQuery(ContextFreeQuery):
             elif text[i] == '$':
                 new_text += 'eps'
                 i += 1
+            elif text[i] == '|' and text[i-1] != '\'':
+                new_text += ') | ('
+                i += 1
+            elif text[i] == '(':
+                new_text += '(('
+                i += 1
+            elif text[i] == ')':
+                new_text += '))'
+                i += 1
+            elif text[i] == '>' and text[i-1] == '-':
+                new_text += '> ('
+                i += 1
+            elif text[i] == '\n':
+                new_text += ')\n'
+                i += 1
             else:
                 new_text += text[i]
                 i += 1
+        print(new_text)
         return new_text
 
     @classmethod
@@ -70,13 +120,11 @@ class PrettyContextFreeQuery(ContextFreeQuery):
             if isinstance(cfg_obj, Variable):
                 return Variable(cfg_obj.value[2:])
             elif isinstance(cfg_obj, Terminal):
-                if cfg_obj.value == 't_space':
-                    return Terminal(' ')
                 if cfg_obj.value == 't_newline':
                     return Terminal('\n')
                 if cfg_obj.value == 't_escape':
                     return Terminal('\\')
-                return Terminal(cfg_obj.value[2:])
+                return Terminal(cls._from_pretty_term(cfg_obj.value))
         def production_to_pretty(production: Production):
             new_production = Production(
                     cfg_obj_to_pretty(production.head),
@@ -85,6 +133,9 @@ class PrettyContextFreeQuery(ContextFreeQuery):
                 )
             return new_production
 
+        pretty_productions = list(map(str, cfq._cfg.productions))
+        pretty_productions.sort()
+        print('\n'.join(pretty_productions))
         new_productions = set(map(production_to_pretty, cfq._cfg.productions))
         new_cfg = CFG(productions = new_productions, start_symbol = Variable('S'))
         res = cls()
@@ -99,6 +150,5 @@ class PrettyContextFreeQuery(ContextFreeQuery):
     @classmethod
     def from_file(cls, path: str) -> "PrettyContextFreeQuery":
         with open(path, 'r') as input_file:
-            lines = input_file.readlines()
-        text = '\n'.join(lines)
+            text = input_file.read()
         return cls.from_text(text)
