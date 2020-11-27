@@ -6,6 +6,8 @@ Repository for hometasks of the cource "Formal Languages"
 
 ## Task7
 
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FSergeyKuz1001%2Fformal_languages_autumn_2020%2Fbadge%3Fref%3Dtask7&style=flat)](https://actions-badge.atrox.dev/SergeyKuz1001/formal_languages_autumn_2020/goto?ref=task7)
+
 Seventh hometask of the cource "Formal Languages"
 
 ### Usage
