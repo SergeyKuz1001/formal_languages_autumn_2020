@@ -167,7 +167,7 @@ class Config:
                                 self._path,
                                 self._args['word_file'])
                     with open(word_file, 'r') as input_file:
-                        self._objs[key] = input_file.readline()[:-1]
+                        self._objs[key] = input_file.read()[:-1]
                 else:
                     raise KeyError('Config hasn\'t word definition')
             elif key == 'return_number_of_pairs':
