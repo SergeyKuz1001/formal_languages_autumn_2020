@@ -1,0 +1,2 @@
+connect to "/data_bases/abc.db",
+select edges from graph "123".
