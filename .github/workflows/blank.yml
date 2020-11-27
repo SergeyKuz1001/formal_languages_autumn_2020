@@ -1,25 +1,31 @@
 name: CI
 on:
   push:
-    branches: [ master ]
+    branches: [ task7 ]
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Build
-        run: docker build -t task4 .
+        run: docker build -t task7 .
       - name: Test pygraphblas
-        run: docker run --rm task4 python3 -m pytest tests/pygraphblas/test.py
+        run: docker run --rm task7 python3 -m pytest tests/pygraphblas/test.py
       - name: Test pyformlang
-        run: docker run --rm task4 python3 -m pytest tests/pyformlang/test.py
+        run: docker run --rm task7 python3 -m pytest tests/pyformlang/test.py
       - name: Test RPQ
-        run: docker run --rm task4 python3 -m pytest tests/rpq/test.py
+        run: docker run --rm task7 python3 -m pytest tests/rpq/test.py
       - name: Test CYK
-        run: docker run --rm task4 python3 -m pytest tests/cyk/test.py
+        run: docker run --rm task7 python3 -m pytest tests/cyk/test.py
       - name: Test CFPQ of Hellings
-        run: docker run --rm task4 python3 -m pytest tests/cfpq/test.py
+        run: docker run --rm task7 python3 -m pytest tests/cfpq/test.py
       - name: Test CFPQ through boolean matrices
-        run: docker run --rm task4 python3 -m pytest tests/cfpq_bm/test.py
+        run: docker run --rm task7 python3 -m pytest tests/cfpq_bm/test.py
       - name: Test CFPQ through tensor product
-        run: docker run --rm task4 python3 -m pytest tests/cfpq_tp/test.py
+        run: docker run --rm task7 python3 -m pytest tests/cfpq_tp/test.py
+      - name: Test query language parser on program 1
+        run: docker run --rm task7 ./main.py -g query_lang.txt -p examples/program_1.txt
+      - name: Test query language parser on program 2
+        run: docker run --rm task7 ./main.py -g query_lang.txt -p examples/program_2.txt
+      - name: Test query language parser on program 3
+        run: docker run --rm task7 ./main.py -g query_lang.txt -p examples/program_3.txt
