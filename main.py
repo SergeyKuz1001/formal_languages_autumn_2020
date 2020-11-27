@@ -18,7 +18,7 @@ from src import Config
 from src.algo import cyk
 
 from argparse import ArgumentParser
-from sys import stdin
+from sys import stdin, exit
 
 def main():
     parser = ArgumentParser()
@@ -39,8 +39,10 @@ def main():
         config._objs['word'] = stdin.read()
     if cyk(config):
         print('Correct')
+        exit(0)
     else:
         print('Incorrect')
+        exit(1)
 
 if __name__ == "__main__":
     main()
