@@ -1,5 +1,5 @@
 S -> mbsep script '.' mbsep
-script -> script ',' mbsep command | command
+script -> command ',' mbsep script | command
 command -> 'connect' sep 'to' sep file_name
 command -> 'select' sep obj_expr sep 'from' sep gr_expr
 obj_expr -> ('count' sep 'of' sep | $) 'edges'
