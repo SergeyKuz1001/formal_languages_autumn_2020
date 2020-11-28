@@ -1,0 +1,26 @@
+connect to "/home/me/my_databases/db1.db",
+define S as A | "b" S,
+A -> (
+    [ "a"+ "b"?
+    | "c"
+    ] . "a"*
+  ),
+select
+    count of edges which
+    [
+        are labeled as "a" or
+        aren't finished in start vertices
+    ]
+from
+    query [S | "b"+ "c"] intersect with
+    graph "graph1" with
+        {1, 2, 3} final vertices and
+        [
+            6..18 union with
+            { 
+                2,
+                21,
+                42
+            }
+        ] start vertices intersect with
+    query A.
