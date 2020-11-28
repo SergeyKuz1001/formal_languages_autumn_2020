@@ -37,3 +37,7 @@ jobs:
         run: docker run --rm task8 ./incorrect_prog examples/no_program_1.txt
       - name: Test query language parser on no program 2
         run: docker run --rm task8 ./incorrect_prog examples/no_program_2.txt
+      - name: Test query language parser on no program 3
+        run: docker run --rm task8 ./incorrect_prog examples/no_program_3.txt
+      - name: Test query language parser on no program 4
+        run: docker run --rm task8 ./incorrect_prog examples/no_program_4.txt
