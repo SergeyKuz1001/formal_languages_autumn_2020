@@ -14,9 +14,10 @@
 
 FROM graphblas/pygraphblas-minimal:v3.3.3
 RUN pip3 install pyformlang
+RUN apt-get update;\
+    apt-get install -y openjdk-11-jdk
+RUN cd /usr/local/lib;\
+    wget https://www.antlr.org/download/antlr-4.9-complete.jar
+ENV CLASSPATH=".:/usr/local/lib/antlr-4.9-complete.jar:$CLASSPATH"
 WORKDIR /
-COPY src/ src/
-COPY tests/ tests/
-COPY examples/ examples/
-COPY main.py main.py
-COPY query_lang.txt query_lang.txt
+COPY . .
