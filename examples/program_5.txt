@@ -23,4 +23,4 @@ from
                 42
             }
         ] start vertices intersect with
-    query ("b"+ "c"?).
+    query !("a" "b" "b"? "c").
