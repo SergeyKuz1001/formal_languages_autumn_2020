@@ -34,7 +34,7 @@ bool_expr : b_3 ;
 b_1 : (b_2 (SEP? '|' SEP? | SEP 'or'  SEP))* b_2 # OrB ;
 b_2 : (b_3 (SEP? '&' SEP? | SEP 'and' SEP))* b_3 # AndB ;
 b_3 : 'are' SEP 'labeled' SEP 'as' SEP term=STRING # LblIsB
-    | 'aren\'t' SEP 'labeled' SEP 'as' SEP term=STRING # LblIsNotB
+    | ('aren\'t' | 'are' SEP 'not') SEP 'labeled' SEP 'as' SEP term=STRING # LblIsNotB
     | 'are' SEP 'started' SEP 'in' SEP 'start' SEP 'vertices' # IsStartSB
     | 'are' SEP 'started' SEP 'in' SEP 'final' SEP 'vertices' # IsStartFB
     | 'are' SEP 'finished' SEP 'in' SEP 'start' SEP 'vertices' # IsFinalSB
