@@ -110,7 +110,8 @@ class RAQuery(ContextFreeQuery, IOGraph):
     @classmethod
     def from_context_free_query(cls, cfq: ContextFreeQuery) -> "RAQuery":
         res = cls()
-        res._cfg = cfq._cfg
+        res._cfg = cfq._cfg # grammar as is
+        #res._cfg = cfq._cfg.to_normal_form() # grammar in CNF
         for production in res._cfg.productions:
             res._Ps.setdefault(production.head, set())
             res._Ps[production.head].add(tuple(production.body))

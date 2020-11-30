@@ -1,9 +1,9 @@
-S A S_2
-S_1 A S_2
-S_2 b
-S_2 B S_1
-S_2 S_1 S_3
-S_3 b
-S_3 B S_1
-A a
-B b
+S -> A S_2
+S_1 -> A S_2
+S_2 -> 'b'
+S_2 -> B S_1
+S_2 -> S_1 S_3
+S_3 -> 'b'
+S_3 -> B S_1
+A -> 'a'
+B -> 'b'

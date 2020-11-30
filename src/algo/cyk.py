@@ -34,7 +34,7 @@ class MyMatrix:
 
 def cyk(config: Config) -> bool:
     word = config['word']
-    query = config['cnf_query']
+    query = config['pretty_cnf_query']
     if word == '':
         return query.generate_epsilon
     for char in word:

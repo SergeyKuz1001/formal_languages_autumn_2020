@@ -1,4 +1,4 @@
 S a B a
-B
+B eps
 B b
 B b S

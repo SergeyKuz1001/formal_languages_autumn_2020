@@ -33,7 +33,7 @@ def test(test_dir):
             [
                 ('config.json', 'config'),
                 ('word.txt', 'word'),
-                ('cfq.txt', 'context_free_query')
+                ('cfq.txt', 'pretty_context_free_query')
             ],
             cyk,
             lambda j: j == 't'
