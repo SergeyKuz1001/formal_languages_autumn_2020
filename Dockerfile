@@ -13,9 +13,9 @@
 #  limitations under the License.
 
 FROM graphblas/pygraphblas-minimal:v3.3.3
-RUN pip3 install pyformlang
+RUN pip3 install pyformlang graphviz
 RUN apt-get update;\
-    apt-get install -y openjdk-11-jdk
+    apt-get install -y openjdk-11-jdk xdg-utils
 RUN cd /usr/local/lib;\
     wget https://www.antlr.org/download/antlr-4.9-complete.jar
 ENV CLASSPATH=".:/usr/local/lib/antlr-4.9-complete.jar:$CLASSPATH"
