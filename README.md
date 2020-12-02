@@ -32,26 +32,17 @@ Now you can:
       * If `echo $?` prints `0`, your program is correct.
 
         You also can check code in file through typing file name after `./correct_prog`.
-      
+
         You also can check that some text isn't program through using `./incorrect_prog` instead.
 
-  * Find out why your text isn't program:
-
-      *
-        ```
-        # docker run -it --rm task8 ./main
-        ```
-
-      * Enter you program. When you finish, press `Ctrl-D`.
-      
-        You also can check code in file through typing file name after `./main`.
-
-  * Get sintax tree:
+  * Get parse tree:
 
     ```
-    # docker run -it --rm -e DISPLAY=unix$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix task8 ./main -gui
+    # docker run -it --rm -e DISPLAY=unix$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix task8 ./main
     ```
-    
+
+    You also can check code in file through typing file name after `./main`.
+
     If new window doesn't open, enter `xhost +si:localuser:root` and try again.
 
 ### Description
