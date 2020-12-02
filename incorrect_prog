@@ -14,14 +14,9 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-is_not_empty () {
-    stdin=$(cat)
-    if [[ $stdin == "" ]]
-    then
-        return 1
-    else
-        return 0
-    fi
-}
-
-./main 2>&1 $@ | is_not_empty
+if ! ./correct_prog $@
+then
+    exit 0
+else
+    exit 1
+fi

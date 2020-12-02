@@ -14,6 +14,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-java -jar /usr/local/lib/antlr-4.9-complete.jar query_lang.g4
-javac query_lang*.java
-java org.antlr.v4.gui.TestRig query_lang script $@
+java -jar /usr/local/lib/antlr-4.9-complete.jar -Dlanguage=Python3 -visitor query_lang.g4
+./generateDOT.py $1
+cat $1
+evince parse_tree.ps

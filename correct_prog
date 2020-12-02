@@ -24,4 +24,4 @@ is_empty () {
     fi
 }
 
-./main 2>&1 $@ | is_empty
+./generateDOT.py 2>&1 $@ | is_empty
