@@ -22,5 +22,6 @@ ENV CLASSPATH=".:/usr/local/lib/antlr-4.9-complete.jar:$CLASSPATH"
 RUN pip3 install graphviz
 RUN apt-get update;\
     apt-get install -y evince
+RUN pip3 install antlr4-python3-runtime
 WORKDIR /
 COPY . .
