@@ -81,18 +81,16 @@ g_3_q : 'query' SEP closed_pattern # QueryNG
           | '[' SEP? g_1 SEP? ']'
         ) # ParenthesisNG
       ;
-io_vertices : start_vs=vertices SEP 'start' SEP 'vertices' # StartIOV
-            | final_vs=vertices SEP 'final' SEP 'vertices' # FinalIOV
-            | (
-                  start_vs=vertices SEP 'start' SEP 'vertices' SEP 'and' SEP
-                  final_vs=vertices SEP 'final' SEP 'vertices'
-                | final_vs=vertices SEP 'final' SEP 'vertices' SEP 'and' SEP
-                  start_vs=vertices SEP 'start' SEP 'vertices'
-              ) # StartAndFinalIOV
+io_vertices : vertices SEP 'start' SEP 'vertices' # StartIOV
+            | vertices SEP 'final' SEP 'vertices' # FinalIOV
+            | vertices SEP 'start' SEP 'vertices' SEP 'and' SEP
+              vertices SEP 'final' SEP 'vertices' # StartAndFinalIOV
+            | vertices SEP 'final' SEP 'vertices' SEP 'and' SEP
+              vertices SEP 'start' SEP 'vertices' # FinalAndStartIOV
             ;
 vertices : v_2 ;
-v_1 : (v_2 SEP 'union' SEP 'with' SEP)* v_2 # UnionV
-    | (v_2 SEP 'intersect' SEP 'with' SEP)* v_2 # IntersectV
+v_1 : (v_2 SEP ('unite'     SEP 'with' | 'U') SEP)* v_2 # UniteV
+    | (v_2 SEP ('intersect' SEP 'with' | 'I') SEP)* v_2 # IntersectV
     ;
 v_2 : '{' SEP? (vertex+=NUM ',' SEP?)* vertex+=NUM SEP? '}' # SetV
     | vertexFrom=NUM SEP? '..' SEP? vertexTo=NUM # RangeV
