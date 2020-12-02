@@ -16,5 +16,3 @@
 
 java -jar /usr/local/lib/antlr-4.9-complete.jar -Dlanguage=Python3 -visitor query_lang.g4
 ./generateDOT.py $1
-cat $1
-evince parse_tree.ps
