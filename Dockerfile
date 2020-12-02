@@ -23,5 +23,7 @@ RUN pip3 install graphviz
 RUN apt-get update;\
     apt-get install -y evince
 RUN pip3 install antlr4-python3-runtime
+RUN apt-get update;\
+    apt-get install -y graphviz
 WORKDIR /
 COPY . .
