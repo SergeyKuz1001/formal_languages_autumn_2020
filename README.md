@@ -38,10 +38,10 @@ Now you can:
   * Get parse tree:
 
     ```
-    # docker run -it --rm -e DISPLAY=unix$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix task8 ./main
+    # docker run -it --rm -e DISPLAY=unix$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix task8 ./draw_tree
     ```
 
-    You also can check code in file through typing file name after `./main`.
+    You also can check code in file through typing file name after `./draw_tree`.
 
     If new window doesn't open, enter `xhost +si:localuser:root` and try again.
 
