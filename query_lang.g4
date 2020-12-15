@@ -21,18 +21,19 @@ command : CONNECT dir_name # ConnectC
         | comment # CommentC
         ;
 dir_name : STRING ;
+comment : STRING ;
 obj_expr : o_1 ;
 o_1 : COUNT o_2 # CountO
     | o_2 # SetO
     ;
 o_2 : EDGES # EdgesO
-    | EDGES_WHICH bool_expr # FilterO
+    | EDGES WHICH bool_expr # FilterO
     ;
 bool_expr : b_3 ;
 b_1 : (b_2 OR)* b_2 # OrB ;
 b_2 : (b_3 AND)* b_3 # AndB ;
-b_3 : ARE LABELED_AS term # LblIsB
-    | ARE_NOT LABELED_AS term # LblIsNotB
+b_3 : ARE LABELED_AS symbol # LblIsB
+    | ARE_NOT LABELED_AS symbol # LblIsNotB
     | ARE STARTED IN START_VERTICES # IsStartSB
     | ARE STARTED IN FINAL_VERTICES # IsStartFB
     | ARE FINISHED IN START_VERTICES # IsFinalSB
@@ -50,6 +51,9 @@ b_3 : ARE LABELED_AS term # LblIsB
         | NOT LB b_1 RB
       ) # NotParenthesisB
     ;
+symbol : term # TermS
+       | nonterm # NontermS
+       ;
 graph_expr : g_1 ;
 g_1 : g_1_g # GG
     | g_1_q # QG
@@ -78,6 +82,7 @@ g_3_q : QUERY closed_pattern (NAMED_AS nonterm)? # QueryG
           | LB g_1 RB
         ) # ParenthesisQG
       ;
+graph_name : STRING ;
 io_vertices : vertices START_VERTICES # StartIOV
             | vertices FINAL_VERTICES # FinalIOV
             | vertices START_VERTICES AND
@@ -89,7 +94,7 @@ vertices : v_2 ;
 v_1 : (v_2 UNITE)* v_2 # UniteV
     | (v_2 INTER)* v_2 # IntersectV
     ;
-v_2 : LC_ (vertex COMMA)* vertex RCs # SetV
+v_2 : LC (vertex COMMA)* vertex RC # SetV
     | vertexFrom RANGE vertexTo # RangeV
     | (
           LP v_1 RP
@@ -117,18 +122,17 @@ p_4 : term # TermP
     ;
 term : STRING ;
 nonterm : NAME ;
-SEP : [ \n]+ ;
-SEP_PROG : ',' SEP? ;
+SEP_PROG : ';' SEP? ;
 END_PROG : '.' ;
 CONNECT : 'connect' SEP 'to' SEP ;
 SELECT : 'select' SEP ;
 FROM : SEP 'from' SEP ;
-ARROW : SEP? '->' SEP? ;
+ARROW : SEP? '->' SEP? | SEP 'is' SEP ;
 COUNT : 'count' SEP 'of' SEP ;
 EDGES : 'edges' ;
-EDGES_WHICH : 'edges' SEP 'which' SEP ;
-OR : SEP 'or' SEP | SEP? '|' SEP? ;
-AND : SEP 'and' SEP | SEP? '&' SEP? ;
+WHICH : SEP 'which' SEP ;
+OR : SEP 'or' SEP | SEP? '||' SEP? ;
+AND : SEP 'and' SEP | SEP? '&&' SEP? ;
 ARE : 'are' SEP ;
 ARE_NOT : 'are' SEP 'not' SEP | 'aren\'t' SEP ;
 LABELED_AS : 'labeled' SEP 'as' SEP ;
@@ -153,11 +157,12 @@ UNITE : SEP ('unite' | 'U') SEP ;
 INTER : SEP ('intersect' | 'I') SEP ;
 COMMA : ',' SEP? ;
 RANGE : SEP? '..' SEP? ;
-ALT : SEP 'or' SEP | SEP? '|' SEP? ;
-CON : SEP | SEP? '.' SEP? ;
+ALT : SEP? '|' SEP? ;
+CON : SEP | SEP? '++' SEP? ;
 STAR : SEP? '*' ;
 PLUS : SEP? '+' ;
 OPT : SEP? '?' ;
+SEP : [ \n]+ ;
 STRING : '"' CHAR* '"' ;
 NUM : NUM_CHAR_NOT_ZERO NUM_CHAR* ;
 NAME : NAME_CHAR+ ;
