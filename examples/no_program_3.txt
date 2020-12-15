@@ -1,10 +1,10 @@
-connect to "/home/me/my_databases/db1.db",
-define S as A | "b" S,
+connect to "/home/me/my_databases/db1.db";
+S -> A | "b" S;
 A -> (
     [ "a"+ "b"?
     | "c"
-    ] . "a"*
-  ),
+    ] ++ "a"*
+  );
 select
     count of edges which
     [
