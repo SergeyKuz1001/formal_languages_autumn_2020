@@ -24,4 +24,4 @@ is_empty () {
     fi
 }
 
-./main 2>&1 $@ | is_empty
+./main 2>&1 $@ | grep "^[lT]" | is_empty
