@@ -73,23 +73,26 @@ g_1_q : g_2_g INTERSECT g_1_q # IntersectGQG
       | g_2_g # JustGQG
       | g_2_q # JustQQG
       ;
-g_2_q : g_3_q WITH io_vertices # SetStartAndFinalQG
-      | g_3_q # JustQG
-      ;
-g_3_q : QUERY closed_pattern (NAMED_AS nonterm)? # QueryG
+g_2_q : g_3_q # JustQG ;
+g_3_q : QUERY nonterm # SimpleQueryG
+      | QUERY closed_pattern NAMED_AS nonterm # ComplexQueryG
       | (
             LP g_1 RP
           | LB g_1 RB
         ) # ParenthesisQG
       ;
 graph_name : STRING ;
-io_vertices : vertices START_VERTICES # StartIOV
-            | vertices FINAL_VERTICES # FinalIOV
-            | vertices START_VERTICES AND
-              vertices FINAL_VERTICES # StartAndFinalIOV
-            | vertices FINAL_VERTICES AND
-              vertices START_VERTICES # FinalAndStartIOV
+io_vertices : start_vertices START_VERTICES # StartIOV
+            | final_vertices FINAL_VERTICES # FinalIOV
+            | (
+                  start_vertices START_VERTICES AND
+                  final_vertices FINAL_VERTICES
+                | final_vertices FINAL_VERTICES AND
+                  start_vertices START_VERTICES
+              ) # StartAndFinalIOV
             ;
+start_vertices : vertices ;
+final_vertices : vertices ;
 vertices : v_2 ;
 v_1 : (v_2 UNITE)* v_2 # UniteV
     | (v_2 INTER)* v_2 # IntersectV
@@ -101,9 +104,9 @@ v_2 : LC (vertex COMMA)* vertex RC # SetV
         | LB v_1 RB
       ) # ParenthesisV
     ;
+vertexFrom : vertex ;
+vertexTo : vertex ;
 vertex : NUM ;
-vertexFrom : NUM ;
-vertexTo : NUM ;
 pattern : p_1 ;
 closed_pattern : p_3 ;
 p_1 : (p_2 ALT)* p_2 # AlternativeP ;
@@ -164,9 +167,10 @@ PLUS : SEP? '+' ;
 OPT : SEP? '?' ;
 SEP : [ \n]+ ;
 STRING : '"' CHAR* '"' ;
-NUM : NUM_CHAR_NOT_ZERO NUM_CHAR* ;
+NUM : NUM_CHAR_NOT_ZERO NUM_CHAR* | NUM_CHAR_ZERO ;
 NAME : NAME_CHAR+ ;
 CHAR : NAME_CHAR | [-., +/()\n] ;
 NAME_CHAR : 'a'..'z' | 'A'..'Z' | '_' | NUM_CHAR ;
-NUM_CHAR : NUM_CHAR_NOT_ZERO | '0' ;
+NUM_CHAR : NUM_CHAR_NOT_ZERO | NUM_CHAR_ZERO ;
 NUM_CHAR_NOT_ZERO : '1'..'9' ;
+NUM_CHAR_ZERO : '0' ;
