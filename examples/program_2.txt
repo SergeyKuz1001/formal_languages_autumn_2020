@@ -1,2 +1,2 @@
-connect to "/data_bases/abc.db";
-select edges from graph "123".
+connect to "data_bases";
+select edges from graph "data_base_1.txt".

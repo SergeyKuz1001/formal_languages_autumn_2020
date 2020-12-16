@@ -1,26 +1,25 @@
-connect to "/home/me/my_databases/db1.db";
-S -> A | "b" S;
-A -> (
-    [ "a"+ "b"?
-    | "c"
-    ] ++ "a"*
-  );
+connect to
+    "data_bases/";
+
+S  -> "a" | CB;
+CB -> "c" "b";
+
 select
-    count of edges which not
-    [
-        are not labeled as B and
-        are finished in start vertices
-    ]
+    edges
 from
-    query [S | "b"+ "c"] named as B intersect with
-    graph "graph1" with
-        {1, 2, 3} final vertices and
-        [
-            6..18 U
-            {
-                2,
-                21,
-                42
-            }
-        ] start vertices intersect with
-    graph "graph2".
+    graph "data_base_1.txt" intersect with
+    query CB;
+
+select
+    edges
+from
+    graph "data_base_1.txt" intersect with
+    query S;
+
+select
+    count of edges
+which
+    are labeled as CB
+from
+    graph "data_base_1.txt" intersect with
+    query S.

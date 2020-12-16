@@ -1,8 +1,8 @@
 connect to
-    "/data_bases/abc.db";
+    "data_bases";
 select
     count of edges
 from
-    graph "123" intersect with
-    query "123" or "456" or "789" intersect with
-    query [("1"* | "2"?) (["3"   "4"] | "5"+)].
+    graph "data_base_1.txt" intersect with
+    query ("a" or "b" or "c") as A intersect with
+    query [("a"* | "b"?) (["a"   "c"] | "b"+)] as B.

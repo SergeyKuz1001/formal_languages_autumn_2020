@@ -1,4 +1,4 @@
-connect to "/home/me/my_databases/db1.db";
+connect to "data_bases";
 S -> A | "b" S;
 A -> (
     [ "a"+ "b"?
@@ -7,14 +7,14 @@ A -> (
   );
 select
     count of edges which
-        are labeled as "a" or
+        are labeled as "a" ||
         aren't finished in start vertices
 from
-    query [S | "b"+ "c"] intersect with
-    graph "graph1" with
+    query [S | "b"+ "c"] named as R intersect with
+    graph "data_base_1.txt" with
         {1, 2, 3} final vertices and
         [
-            6..18 unite with
+            6..18 unite
             { 
                 2,
                 21,
