@@ -4,6 +4,53 @@
 
 Repository for hometasks of the cource "Formal Languages"
 
+## Task9
+
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FSergeyKuz1001%2Fformal_languages_autumn_2020%2Fbadge%3Fref%3Dtask9&style=flat)](https://actions-badge.atrox.dev/SergeyKuz1001/formal_languages_autumn_2020/goto?ref=task9)
+
+Ninth hometask of the cource "Formal Languages"
+
+### Usage
+
+Firstly, you must build docker-container:
+
+```
+# docker build -t task9 .
+```
+
+Now you can:
+
+  * Check if some text is correct program on this query language:
+
+      *
+        ```
+        # docker run -it --rm task9 ./correct_prog
+        ```
+
+      * Enter you program. When you finish, press `Ctrl-D`.
+
+      * If `echo $?` prints `0`, your program is correct.
+
+        You also can check code in file through typing file name after `./correct_prog`.
+
+        You also can check that some text isn't program through using `./incorrect_prog` instead.
+
+  * Execute program:
+
+    ```
+    # docker run -it --rm task9 ./main
+    ```
+
+    You also can check code in file through typing file name after `./main`.
+
+### Description
+
+`query_lang.g4` is grammar of this query language.
+
+`examples/` is directory with examples of correct and incorrect programs.
+
+`data_bases/` is directory with examples of databases.
+
 ## Task8
 
 [![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FSergeyKuz1001%2Fformal_languages_autumn_2020%2Fbadge%3Fref%3Dtask8&style=flat)](https://actions-badge.atrox.dev/SergeyKuz1001/formal_languages_autumn_2020/goto?ref=task8)
