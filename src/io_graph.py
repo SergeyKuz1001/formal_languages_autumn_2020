@@ -14,7 +14,6 @@
 
 from .graph import Graph
 
-from pyformlang.finite_automaton import Symbol
 from pygraphblas import Matrix, types
 from typing import Dict, List, Iterable, Tuple, Optional, Set
 

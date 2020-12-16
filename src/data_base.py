@@ -14,10 +14,10 @@
 
 from .graph import Graph
 
-from pyformlang.finite_automaton import Symbol
 from pygraphblas import Matrix, types
 from typing import List
 
+Symbol = str
 Vertex = int
 
 class DataBase(Graph):

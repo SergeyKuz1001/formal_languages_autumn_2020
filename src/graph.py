@@ -12,12 +12,12 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from pyformlang.finite_automaton import Symbol
 from pygraphblas import Matrix, types
 from functools import reduce
 import operator
 from typing import Dict, List, Iterable, Tuple, Optional
 
+Symbol = str
 Vertex = int
 
 class Graph:
