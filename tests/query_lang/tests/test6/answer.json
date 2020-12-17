@@ -1,4 +1,5 @@
 [
+    "print count of edges and edges from database data_bases/data_base_2.txt",
     12,
     [
         [3, "a", 5],
@@ -14,6 +15,7 @@
         [2, "c", 0],
         [2, "a", 3]
     ],
+    "print edges from intersection of database and context-free query",
     [
         [0, "aC", 4],
         [2, "b", 3],

@@ -2,6 +2,7 @@ connect to
     "data_bases/";
 C -> "c"+;
 
+"print count of edges and edges from database data_bases/data_base_2.txt";
 select count of edges
 from graph "data_base_2.txt";
 select edges
@@ -9,11 +10,11 @@ from graph "data_base_2.txt";
 
 bC -> "b" C;
 
+"print edges from intersection of database and context-free query";
 select edges
 from
     graph "data_base_2.txt" intersect with
     query ["a" C] named as aC;
-
 select edges
 which (
     are labeled as  C ||
