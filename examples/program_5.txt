@@ -1,1 +1,25 @@
-tests/query_lang/tests/test5/script.txt
+connect to
+    "data_bases/";
+
+S  -> "a" | CB;
+CB -> "c"."b";
+
+select
+    edges
+from
+    graph "data_base_1.txt" intersect with
+    query CB;
+
+select
+    edges
+from
+    graph "data_base_1.txt" intersect with
+    query S;
+
+select
+    count of edges
+which
+    are labeled as CB
+from
+    graph "data_base_1.txt" intersect with
+    query S;

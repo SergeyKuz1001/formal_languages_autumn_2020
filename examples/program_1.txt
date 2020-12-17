@@ -1,1 +1,1 @@
-tests/query_lang/tests/test1/script.txt
+connect to "/data_bases/abc.db";

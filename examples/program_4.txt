@@ -1,1 +1,37 @@
-tests/query_lang/tests/test4/script.txt
+connect to "data_bases";
+S is A | "b" S;
+A -> (
+    [ "a"+ "b"?
+    | "c"
+    ] . "a"*
+  );
+select
+    edges
+which
+    [
+        are labeled as "a" ||
+        are labeled as S
+    ]
+from
+    query S intersect with
+    graph "data_base_1.txt";
+select
+    edges
+which
+    [
+        are labeled as "a" ||
+        aren't finished in start vertices
+    ]
+from
+    query ("c"? "a") named as S intersect with
+    graph "data_base_1.txt" with 0..2 start vertices;
+select
+    count of edges
+which
+    [
+        are labeled as "c" &&
+        aren't started in final vertices
+    ]
+from
+    query S intersect with
+    graph "data_base_1.txt" with {1, 3} final vertices;

@@ -1,1 +1,7 @@
-tests/query_lang/tests/test3/script.txt
+connect to
+    "data_bases/";
+select
+    edges
+from
+    graph "data_base_1.txt" intersect with
+    query ("a" | "c" "b") as S;
