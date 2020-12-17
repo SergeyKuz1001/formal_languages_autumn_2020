@@ -15,7 +15,7 @@ Ninth hometask of the cource "Formal Languages"
 Firstly, you must build this project:
 
 ```
-# build
+# ./build
 ```
 
 Now you can:
