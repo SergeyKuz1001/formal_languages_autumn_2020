@@ -1,0 +1,2 @@
+connect to "data_bases";
+select edges from graph "data_base_1.txt";
