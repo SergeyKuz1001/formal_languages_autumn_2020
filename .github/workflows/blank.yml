@@ -39,3 +39,5 @@ jobs:
         run: docker run --rm task9 ./incorrect_prog examples/no_program_1.txt
       - name: Test query language parser on no program 2
         run: docker run --rm task9 ./incorrect_prog examples/no_program_2.txt
+      - name: Test query language interpreter
+        run: docker run --rm task9 python3 -m pytest tests/query_lang/test.py
