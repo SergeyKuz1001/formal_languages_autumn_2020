@@ -3,7 +3,7 @@ S -> A | "b" S;
 A -> (
     [ "a"+ "b"?
     | "c"
-    ] ++ "a"*
+    ] . "a"*
   );
 select
     count of edges which
@@ -20,4 +20,4 @@ from
                 21,
                 42
             }
-        ] start vertices.
+        ] start vertices;

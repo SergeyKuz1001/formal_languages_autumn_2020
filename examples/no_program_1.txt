@@ -5,4 +5,4 @@ select
 from
     graph "data_base_1.txt" intersect with
     query ("a" or "b" or "c") as A intersect with
-    query [("a"* | "b"?) (["a"   "c"] | "b"+)] as B.
+    query [("a"* | "b"?) (["a" . "c"] | "b"+)] as B;
