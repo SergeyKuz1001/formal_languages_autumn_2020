@@ -14,7 +14,7 @@
    limitations under the License.
 */
 grammar query_lang;
-script : SEP? (command SEP_PROG)* command END_PROG SEP? ;
+script : SEP? (command SEP_PROG)+ ;
 command : CONNECT dir_name # ConnectC
         | SELECT obj_expr FROM graph_expr # SelectC
         | nonterm ARROW pattern # NamedPatternC
@@ -126,7 +126,6 @@ p_4 : term # TermP
 term : STRING ;
 nonterm : NAME ;
 SEP_PROG : ';' SEP? ;
-END_PROG : '.' ;
 CONNECT : 'connect' SEP 'to' SEP ;
 SELECT : 'select' SEP ;
 FROM : SEP 'from' SEP ;
@@ -161,7 +160,7 @@ INTER : SEP ('intersect' | 'I') SEP ;
 COMMA : ',' SEP? ;
 RANGE : SEP? '..' SEP? ;
 ALT : SEP? '|' SEP? ;
-CON : SEP | SEP? '++' SEP? ;
+CON : SEP | SEP? '.' SEP? ;
 STAR : SEP? '*' ;
 PLUS : SEP? '+' ;
 OPT : SEP? '?' ;
