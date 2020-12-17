@@ -10,12 +10,12 @@ Repository for hometasks of the cource "Formal Languages"
 
 Ninth hometask of the cource "Formal Languages"
 
-### Usage
+### Common usage
 
-Firstly, you must build docker-container:
+Firstly, you must build this project:
 
 ```
-# docker build -t task9 .
+# build
 ```
 
 Now you can:
@@ -24,7 +24,7 @@ Now you can:
 
       *
         ```
-        # docker run -it --rm task9 ./correct_prog
+        # ./correct_prog
         ```
 
       * Enter you program. When you finish, press `Ctrl-D`.
@@ -38,10 +38,24 @@ Now you can:
   * Execute program:
 
     ```
-    # docker run -it --rm task9 ./main
+    # ./interpret.py
     ```
 
     You also can check code in file through typing file name after `./main`.
+
+### Usage through docker
+
+Building docker-container:
+
+```
+# docker build -t task9 .
+```
+
+Running docker-container:
+
+```
+# docker run -it --rm task9 <command from chapter above>
+```
 
 ### Description
 
@@ -50,6 +64,8 @@ Now you can:
 `examples/` is directory with examples of correct and incorrect programs.
 
 `data_bases/` is directory with examples of databases.
+
+`tests/query_lang` is directory with tests of query language interpreter.
 
 ## Task8
 
