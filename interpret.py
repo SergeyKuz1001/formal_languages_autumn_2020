@@ -16,7 +16,6 @@
 
 import sys
 from antlr4 import *
-#from antlr4.InputStream import InputStream
 from query_langLexer import query_langLexer
 from query_langParser import query_langParser
 from query_langInterpreter import query_langInterpreter
@@ -38,4 +37,4 @@ if __name__ == '__main__':
             f.write(prog)
         res = interpret('your_program.txt')
     if not res is None:
-        print(res, end = '')
+        print(*res, sep='\n')
