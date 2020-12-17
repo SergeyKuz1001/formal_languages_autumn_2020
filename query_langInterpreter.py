@@ -91,10 +91,11 @@ class query_langInterpreter(query_langVisitor):
         self.db_dir = None
         self.grammar = dict()
         self.graph = None
+        self.result = []
         self.parser = parser
 
     def interpret(self):
-        self.visit(self.parser.script())
+        return self.visit(self.parser.script())
 
     def get_edges(self, predicate):
         def nontemp_edge(edge):
@@ -125,6 +126,7 @@ class query_langInterpreter(query_langVisitor):
     def visitScript(self, ctx:query_langParser.ScriptContext):
         for command in ctx.command():
             self.visit(command)
+        return self.result
 
     def visitConnectC(self, ctx:query_langParser.ConnectCContext):
         self.db_dir = text(ctx.dir_name())
@@ -137,7 +139,7 @@ class query_langInterpreter(query_langVisitor):
         self.grammar[nonterm_to_text(ctx.nonterm())] = self.visit(ctx.pattern())
 
     def visitCommentC(self, ctx:query_langParser.CommentCContext):
-        pass
+        self.result.append(text(ctx.comment()))
 
     def visitDir_name(self, ctx:query_langParser.Dir_nameContext):
         raise VisitException('Dir_name')
@@ -146,7 +148,7 @@ class query_langInterpreter(query_langVisitor):
         raise VisitException('Comment')
 
     def visitObj_expr(self, ctx:query_langParser.Obj_exprContext):
-        print(self.visit(ctx.o_1()))
+        self.result.append(self.visit(ctx.o_1()))
 
     def visitCountO(self, ctx:query_langParser.CountOContext):
         return len(self.visit(ctx.o_2()))
