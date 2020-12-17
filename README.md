@@ -41,7 +41,7 @@ Now you can:
     # ./interpret.py
     ```
 
-    You also can check code in file through typing file name after `./main`.
+    You also can check code in file through typing file name after `./interpret.py`.
 
 ### Usage through docker
 
