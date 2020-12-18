@@ -48,8 +48,8 @@ class ContextFreeQuery(Query):
             return '|' not in line
 
         if isinstance(regex.head, regex_objects.Concatenation):
-            head_C0 = head + "_C0"
-            head_C1 = head + "_C1"
+            head_C0 = head + "_C0_"
+            head_C1 = head + "_C1_"
             rec_0, lines_0 = cls._from_head_and_regex(head_C0, regex.sons[0])
             rec_1, lines_1 = cls._from_head_and_regex(head_C1, regex.sons[1])
             if without_union(lines_0[0]) and not rec_0:
@@ -62,8 +62,8 @@ class ContextFreeQuery(Query):
                 [head + " -> " + head_C0 + " " + head_C1] +
                 lines_0 + lines_1)
         if isinstance(regex.head, regex_objects.Union):
-            head_U0 = head + "_U0"
-            head_U1 = head + "_U1"
+            head_U0 = head + "_U0_"
+            head_U1 = head + "_U1_"
             rec_0, lines_0 = cls._from_head_and_regex(head_U0, regex.sons[0])
             rec_1, lines_1 = cls._from_head_and_regex(head_U1, regex.sons[1])
             if not rec_0:
@@ -76,7 +76,7 @@ class ContextFreeQuery(Query):
                 [head + " -> " + head_U0 + " | " + head_U1] +
                 lines_0 + lines_1)
         if isinstance(regex.head, regex_objects.KleeneStar):
-            head_KS = head + "_KS"
+            head_KS = head + "_KS_"
             rec, lines = cls._from_head_and_regex(head_KS, regex.sons[0])
             if without_union(lines[0]) and not rec:
                 head_KS = lines[0].split("->")[1].strip()
@@ -97,7 +97,7 @@ class ContextFreeQuery(Query):
         return result
 
     @classmethod
-    def from_text(cls, text: str) -> "ContextFreeQuery":
+    def from_text(cls, text: str, start_symbol = "S") -> "ContextFreeQuery":
         res = cls()
         text = text.replace("eps", "$")
         lines = text.splitlines()
@@ -112,11 +112,11 @@ class ContextFreeQuery(Query):
         for head, body in heads_and_bodies.items():
             heads_and_bodies[head] = Regex(body)
         text = cls._from_heads_and_regexes(heads_and_bodies.items())
-        res._cfg = CFG.from_text(text)
+        res._cfg = CFG.from_text(text, Variable(start_symbol))
         return res
 
     @classmethod
-    def from_file(cls, path: str) -> "ContextFreeQuery":
+    def from_file(cls, path: str, start_symbol = "S") -> "ContextFreeQuery":
         def my_insert(l, i, el):
             l_ = l.copy()
             l_.insert(i, el)
@@ -128,4 +128,4 @@ class ContextFreeQuery(Query):
             lambda line: ' '.join(my_insert(line.split(), 1, '->')),
             lines
           ))
-        return cls.from_text(text)
+        return cls.from_text(text, start_symbol)

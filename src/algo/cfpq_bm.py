@@ -30,7 +30,7 @@ def cfpq_bm(config: Config) -> Union[bool, Set[Tuple[Vertex, Vertex]]]:
             for A in query.variables
         }
     for terminal, variables in query.simple_antiproductions.items():
-        for i, j, _ in data_base.matrices[Symbol(terminal.value)]:
+        for i, j, _ in data_base.matrices[terminal.value]:
             for variable in variables:
                 T[variable][i, j] = True
     if query.generate_epsilon:

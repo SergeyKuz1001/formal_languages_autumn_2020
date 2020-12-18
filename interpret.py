@@ -16,21 +16,25 @@
 
 import sys
 from antlr4 import *
-from antlr4.InputStream import InputStream
 from query_langLexer import query_langLexer
 from query_langParser import query_langParser
-from query_langDOTGenerator import query_langDOTGenerator
+from query_langInterpreter import query_langInterpreter
 
-def main():
-    if len(sys.argv) > 1:
-        input_stream = FileStream(sys.argv[1])
-    else:
-        input_stream = InputStream(sys.stdin.read())
+def interpret(script_file):
+    input_stream = FileStream(script_file)
     lexer = query_langLexer(input_stream)
     token_stream = CommonTokenStream(lexer)
     parser = query_langParser(token_stream)
-    generator = query_langDOTGenerator(parser)
-    generator.generateDOT('Parse tree')
+    interpreter = query_langInterpreter(parser)
+    return interpreter.interpret()
 
 if __name__ == '__main__':
-    main()
+    if len(sys.argv) > 1:
+        res = interpret(sys.argv[1])
+    else:
+        prog = sys.stdin.read()
+        with open('your_program.txt', 'w') as f:
+            f.write(prog)
+        res = interpret('your_program.txt')
+    if not res is None:
+        print(*res, sep='\n')

@@ -58,8 +58,10 @@ class CNFQuery(ContextFreeQuery):
         return res
 
     @classmethod
-    def from_text(cls, text: str) -> "CNFQuery":
-        return cls.from_context_free_query(ContextFreeQuery.from_text(text))
+    def from_text(cls, text: str, start_symbol = "S") -> "CNFQuery":
+        return cls.from_context_free_query(
+                ContextFreeQuery.from_text(text, start_symbol)
+            )
 
     def _eval_APs(self) -> None:
         self._simple_APs = dict()

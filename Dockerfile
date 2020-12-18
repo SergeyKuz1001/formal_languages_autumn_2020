@@ -21,3 +21,4 @@ RUN cd /usr/local/lib;\
 ENV CLASSPATH=".:/usr/local/lib/antlr-4.9-complete.jar:$CLASSPATH"
 WORKDIR /
 COPY . .
+RUN java -jar /usr/local/lib/antlr-4.9-complete.jar -Dlanguage=Python3 -visitor query_lang.g4

@@ -14,126 +14,162 @@
    limitations under the License.
 */
 grammar query_lang;
-script : SEP? (command ',' SEP?)* command '.' SEP? ;
-command : 'connect' SEP 'to' SEP file_name=STRING # ConnectC
-        | 'select' SEP obj_expr SEP 'from' SEP graph_expr # SelectC
-        | (
-              'define' SEP nonterm=NAME SEP 'as' SEP pattern
-            | nonterm=NAME SEP? '->' SEP? pattern
-          ) # NamedPatternC
-        | comment=STRING # CommentC
+script : SEP? (command SEP_PROG)+ ;
+command : CONNECT dir_name # ConnectC
+        | SELECT obj_expr FROM graph_expr # SelectC
+        | nonterm ARROW pattern # NamedPatternC
+        | comment # CommentC
         ;
+dir_name : STRING ;
+comment : STRING ;
 obj_expr : o_1 ;
-o_1 : 'count' SEP 'of' SEP o_2 # CountO
+o_1 : COUNT o_2 # CountO
     | o_2 # SetO
     ;
-o_2 : 'edges' # EdgesO
-    | 'edges' SEP 'which' SEP bool_expr # FilterO
+o_2 : EDGES # EdgesO
+    | EDGES WHICH bool_expr # FilterO
     ;
 bool_expr : b_3 ;
-b_1 : (b_2 (SEP? '|' SEP? | SEP 'or'  SEP))* b_2 # OrB ;
-b_2 : (b_3 (SEP? '&' SEP? | SEP 'and' SEP))* b_3 # AndB ;
-b_3 : 'are' SEP 'labeled' SEP 'as' SEP term=STRING # LblIsB
-    | ('aren\'t' | 'are' SEP 'not') SEP 'labeled' SEP 'as' SEP term=STRING # LblIsNotB
-    | 'are' SEP 'started' SEP 'in' SEP 'start' SEP 'vertices' # IsStartSB
-    | 'are' SEP 'started' SEP 'in' SEP 'final' SEP 'vertices' # IsStartFB
-    | 'are' SEP 'finished' SEP 'in' SEP 'start' SEP 'vertices' # IsFinalSB
-    | 'are' SEP 'finished' SEP 'in' SEP 'final' SEP 'vertices' # IsFinalFB
-    | ('aren\'t' | 'are' SEP 'not') SEP 'started' SEP 'in' SEP 'start' SEP 'vertices' # IsNotStartSB
-    | ('aren\'t' | 'are' SEP 'not') SEP 'started' SEP 'in' SEP 'final' SEP 'vertices' # IsNotStartFB
-    | ('aren\'t' | 'are' SEP 'not') SEP 'finished' SEP 'in' SEP 'start' SEP 'vertices' # IsNotFinalSB
-    | ('aren\'t' | 'are' SEP 'not') SEP 'finished' SEP 'in' SEP 'final' SEP 'vertices' # IsNotFinalFB
+b_1 : (b_2 OR)* b_2 # OrB ;
+b_2 : (b_3 AND)* b_3 # AndB ;
+b_3 : ARE LABELED_AS symbol # LblIsB
+    | ARE_NOT LABELED_AS symbol # LblIsNotB
+    | ARE STARTED IN START_VERTICES # IsStartSB
+    | ARE STARTED IN FINAL_VERTICES # IsStartFB
+    | ARE FINISHED IN START_VERTICES # IsFinalSB
+    | ARE FINISHED IN FINAL_VERTICES # IsFinalFB
+    | ARE_NOT STARTED IN START_VERTICES # IsNotStartSB
+    | ARE_NOT STARTED IN FINAL_VERTICES # IsNotStartFB
+    | ARE_NOT FINISHED IN START_VERTICES # IsNotFinalSB
+    | ARE_NOT FINISHED IN FINAL_VERTICES # IsNotFinalFB
     | (
-          '(' SEP? b_1 SEP? ')'
-        | '[' SEP? b_1 SEP? ']'
+          LP b_1 RP
+        | LB b_1 RB
       ) # ParenthesisB
     | (
-          ('not' SEP | '!' SEP?) '(' SEP? b_1 SEP? ')'
-        | ('not' SEP | '!' SEP?) '[' SEP? b_1 SEP? ']'
+          NOT LP b_1 RP
+        | NOT LB b_1 RB
       ) # NotParenthesisB
     ;
+symbol : term # TermS
+       | nonterm # NontermS
+       ;
 graph_expr : g_1 ;
-g_1 : g_1_g # DFAG
-    | g_1_q # NoDFAG
+g_1 : g_1_g # GG
+    | g_1_q # QG
     ;
-g_1_g : (g_2_g SEP 'intersect' SEP 'with' SEP)* g_2_g # IntersectDG ;
-g_2_g : g_3_g SEP 'with' SEP io_vertices # SetStartAndFinalDG
-      | g_3_g # JustDG
+g_1_g : (g_2_g INTERSECT)* g_2_g # IntersectGG ;
+g_2_g : g_3_g WITH io_vertices # SetStartAndFinalGG
+      | g_3_g # JustGG
       ;
-g_3_g : 'graph' SEP graph_name=STRING # GraphDG
-      | 'query' SEP regex # QueryDG
+g_3_g : GRAPH graph_name # GraphG
       | (
-            '(' SEP? g_1_g SEP? ')'
-          | '[' SEP? g_1_g SEP? ']'
-        ) # ParenthesisDG
+            LP g_1_g RP
+          | LB g_1_g RB
+        ) # ParenthesisGG
       ;
-g_1_q :   dfa=g_2_g SEP 'intersect' SEP 'with' SEP g_1_q # IntersectDNG
-      | nodfa=g_2_q SEP 'intersect' SEP 'with' SEP g_1_g # IntersectNNG
-      | g_2_g # JustDNG
-      | g_2_q # JustNNG
+g_1_q : g_2_g INTERSECT g_1_q # IntersectGQG
+      | g_2_q INTERSECT g_1_g # IntersectQQG
+      | g_2_g # JustGQG
+      | g_2_q # JustQQG
       ;
-g_2_q : g_3_q SEP 'with' SEP io_vertices # SetStartAndFinalNG
-      | g_3_q # JustNG
-      ;
-g_3_q : 'query' SEP closed_pattern # QueryNG
+g_2_q : g_3_q # JustQG ;
+g_3_q : QUERY nonterm # SimpleQueryG
+      | QUERY closed_pattern NAMED_AS nonterm # ComplexQueryG
       | (
-            '(' SEP? g_1 SEP? ')'
-          | '[' SEP? g_1 SEP? ']'
-        ) # ParenthesisNG
+            LP g_1 RP
+          | LB g_1 RB
+        ) # ParenthesisQG
       ;
-io_vertices : vertices SEP 'start' SEP 'vertices' # StartIOV
-            | vertices SEP 'final' SEP 'vertices' # FinalIOV
-            | vertices SEP 'start' SEP 'vertices' SEP 'and' SEP
-              vertices SEP 'final' SEP 'vertices' # StartAndFinalIOV
-            | vertices SEP 'final' SEP 'vertices' SEP 'and' SEP
-              vertices SEP 'start' SEP 'vertices' # FinalAndStartIOV
+graph_name : STRING ;
+io_vertices : start_vertices START_VERTICES # StartIOV
+            | final_vertices FINAL_VERTICES # FinalIOV
+            | (
+                  start_vertices START_VERTICES AND
+                  final_vertices FINAL_VERTICES
+                | final_vertices FINAL_VERTICES AND
+                  start_vertices START_VERTICES
+              ) # StartAndFinalIOV
             ;
+start_vertices : vertices ;
+final_vertices : vertices ;
 vertices : v_2 ;
-v_1 : (v_2 SEP ('unite'     SEP 'with' | 'U') SEP)* v_2 # UniteV
-    | (v_2 SEP ('intersect' SEP 'with' | 'I') SEP)* v_2 # IntersectV
+v_1 : (v_2 UNITE)* v_2 # UniteV
+    | (v_2 INTER)* v_2 # IntersectV
     ;
-v_2 : '{' SEP? (vertex+=NUM ',' SEP?)* vertex+=NUM SEP? '}' # SetV
-    | vertexFrom=NUM SEP? '..' SEP? vertexTo=NUM # RangeV
+v_2 : LC (vertex COMMA)* vertex RC # SetV
+    | vertexFrom RANGE vertexTo # RangeV
     | (
-          '(' SEP? v_1 SEP? ')'
-        | '[' SEP? v_1 SEP? ']'
+          LP v_1 RP
+        | LB v_1 RB
       ) # ParenthesisV
     ;
+vertexFrom : vertex ;
+vertexTo : vertex ;
+vertex : NUM ;
 pattern : p_1 ;
 closed_pattern : p_3 ;
-p_1 : (p_2 (SEP? '|' SEP? | SEP 'or' SEP))* p_2 # AlternativeP ;
-p_2 : (p_3 (SEP | SEP? '.' SEP?))* p_3 # ConcatenationP ;
-p_3 : p_4 SEP? '*' # KleeneStarP
-    | p_4 SEP? '+' # KleenePlusP
-    | p_4 SEP? '?' # OptionP
+p_1 : (p_2 ALT)* p_2 # AlternativeP ;
+p_2 : (p_3 CON)* p_3 # ConcatenationP ;
+p_3 : p_4 STAR # KleeneStarP
+    | p_4 PLUS # KleenePlusP
+    | p_4 OPT # OptionP
     | p_4 # JustP
     ;
-p_4 : term=STRING # TermP
-    | nonterm=NAME # NontermP
+p_4 : term # TermP
+    | nonterm # NontermP
     | (
-          '(' SEP? p_1 SEP? ')'
-        | '[' SEP? p_1 SEP? ']'
+          LP p_1 RP
+        | LB p_1 RB
       ) # ParenthesisP
     ;
-regex : r_3 ;
-r_1 : (r_2 (SEP? '|' SEP? | SEP 'or' SEP))* r_2 # AlternativeR ;
-r_2 : (r_3 (SEP | SEP? '.' SEP?))* r_3 # ConcatenationR ;
-r_3 : r_4 SEP? '*' # KleeneStarR
-    | r_4 SEP? '+' # KleenePlusR
-    | r_4 SEP? '?' # OptionR
-    | r_4 # JustR
-    ;
-r_4 : term=STRING # LiteralR
-    | (
-          '(' SEP? r_1 SEP? ')'
-        | '[' SEP? r_1 SEP? ']'
-      ) # ParenthesisR
-    ;
+term : STRING ;
+nonterm : NAME ;
+SEP_PROG : ';' SEP? ;
+CONNECT : 'connect' SEP 'to' SEP ;
+SELECT : 'select' SEP ;
+FROM : SEP 'from' SEP ;
+ARROW : SEP? '->' SEP? | SEP 'is' SEP ;
+COUNT : 'count' SEP 'of' SEP ;
+EDGES : 'edges' ;
+WHICH : SEP 'which' SEP ;
+OR : SEP 'or' SEP | SEP? '||' SEP? ;
+AND : SEP 'and' SEP | SEP? '&&' SEP? ;
+ARE : 'are' SEP ;
+ARE_NOT : 'are' SEP 'not' SEP | 'aren\'t' SEP ;
+LABELED_AS : 'labeled' SEP 'as' SEP ;
+STARTED : 'started' SEP ;
+FINISHED : 'finished' SEP ;
+IN : 'in' ;
+START_VERTICES : SEP 'start' SEP 'vertices' ;
+FINAL_VERTICES : SEP 'final' SEP 'vertices' ;
+LP : '(' SEP? ;
+RP : SEP? ')' ;
+LB : '[' SEP? ;
+RB : SEP? ']' ;
+LC : '{' SEP? ;
+RC : SEP? '}' ;
+NOT : 'not' SEP | '!' SEP? ;
+INTERSECT : SEP 'intersect' SEP 'with' SEP ;
+WITH : SEP 'with' SEP ;
+GRAPH : 'graph' SEP ;
+QUERY : 'query' SEP ;
+NAMED_AS : (SEP 'named')? SEP 'as' SEP ;
+UNITE : SEP ('unite' | 'U') SEP ;
+INTER : SEP ('intersect' | 'I') SEP ;
+COMMA : ',' SEP? ;
+RANGE : SEP? '..' SEP? ;
+ALT : SEP? '|' SEP? ;
+CON : SEP | SEP? '.' SEP? ;
+STAR : SEP? '*' ;
+PLUS : SEP? '+' ;
+OPT : SEP? '?' ;
 SEP : [ \n]+ ;
 STRING : '"' CHAR* '"' ;
-NUM : NUM_CHAR_NOT_ZERO NUM_CHAR* ;
+NUM : NUM_CHAR_NOT_ZERO NUM_CHAR* | NUM_CHAR_ZERO ;
 NAME : NAME_CHAR+ ;
 CHAR : NAME_CHAR | [-., +/()\n] ;
 NAME_CHAR : 'a'..'z' | 'A'..'Z' | '_' | NUM_CHAR ;
-NUM_CHAR : NUM_CHAR_NOT_ZERO | '0' ;
+NUM_CHAR : NUM_CHAR_NOT_ZERO | NUM_CHAR_ZERO ;
 NUM_CHAR_NOT_ZERO : '1'..'9' ;
+NUM_CHAR_ZERO : '0' ;
