@@ -1,0 +1,6 @@
+[
+    "Please, choose database name. You can type:\n  * G1k-0.001\n  * G1k-0.01\n  * G1k-0.1\n  * G5k-0.001\n  * G5k-0.01\n  * G10k-0.001\n  * G10k-0.01",
+    "You've chosen ../data_bases/data_base_4.txt",
+    "There is good path between this points:",
+    [[2, 0], [2, 1], [2, 2], [0, 0], [1, 1], [1, 2], [1, 0], [3, 3], [3, 1], [3, 2], [3, 0]]
+]

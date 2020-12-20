@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #  Copyright 2020 Sergey Kuzivanov
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,15 +14,9 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-FROM graphblas/pygraphblas-minimal:v3.3.3
-RUN apt-get update;\
-    apt-get install -y openjdk-11-jdk graphviz evince
-RUN pip3 install pyformlang graphviz antlr4-python3-runtime
-RUN cd /usr/local/lib;\
-    wget https://www.antlr.org/download/antlr-4.9-complete.jar
-ENV CLASSPATH=".:/usr/local/lib/antlr-4.9-complete.jar:$CLASSPATH"
-WORKDIR /
-COPY download_database.sh .
-RUN ./download_database.sh
-COPY . .
-RUN ./build.sh
+if [[ ! -f "MiniGDBEvalData.tar.xz" ]]
+then
+    wget --content-disposition \
+        "https://docs.google.com/uc?export=download&id=1nRaXzIdEQf6DoDFWCQhCeOSMC--3u3AB"
+    tar -xf "MiniGDBEvalData.tar.xz"
+fi

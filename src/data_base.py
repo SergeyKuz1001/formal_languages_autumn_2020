@@ -21,6 +21,9 @@ Symbol = str
 Vertex = int
 
 class DataBase(Graph):
+    def __and__(self, other: "DataBase") -> "DataBase":
+        return self.from_graph(self @ other)
+
     @classmethod
     def from_lists(cls,
                    Vs_from: List[Vertex],
@@ -44,3 +47,10 @@ class DataBase(Graph):
                               list(map(int, Vs_to)),
                               list(map(Symbol, Ss))
                              )
+
+    @classmethod
+    def from_graph(cls, graph: Graph) -> "DataBase":
+        res = cls()
+        res._matrices = graph._matrices
+        res._count_Vs = graph._count_Vs
+        return res

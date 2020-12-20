@@ -19,6 +19,8 @@ import json
 import pytest
 from typing import List, Tuple, Any, Callable
 
+MAIN_TASK_DIR = \
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../tasks')
 MAIN_TEST_DIR = \
         os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tests')
 TEST_DIRS = list(map(
@@ -26,14 +28,24 @@ TEST_DIRS = list(map(
         os.listdir(MAIN_TEST_DIR)
     ))
 
+def list_to_tuple(l):
+    if isinstance(l, list):
+        return tuple(l)
+    return l
+
 def list_to_set(l):
     if isinstance(l, list):
-        return set(map(tuple, l))
+        return set(map(list_to_tuple, l))
     return l
 
 @pytest.mark.parametrize('test_dir', TEST_DIRS)
 def test(test_dir):
-    result = interpret(os.path.join(test_dir, 'script.txt'), online = False)
+    task_num, _ = os.path.basename(test_dir).split('_')
+    with open(os.path.join(test_dir, 'inputs.json'), 'r') as inputs_file:
+        inputs = json.load(inputs_file)
+    result = interpret(
+            os.path.join(MAIN_TASK_DIR, f'task{task_num}.txt'), False, inputs
+        )
     with open(os.path.join(test_dir, 'answer.json'), 'r') as answer_file:
         answer = list(map(list_to_set, json.load(answer_file)))
     assert result == answer

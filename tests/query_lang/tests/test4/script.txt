@@ -1,5 +1,5 @@
 connect to "data_bases";
-S is A | "b" S;
+S -> A | "b" S;
 A -> (
     [ "a"+ "b"?
     | "c"
@@ -7,31 +7,31 @@ A -> (
   );
 select
     edges
-which
-    [
-        are labeled as "a" ||
-        are labeled as S
-    ]
 from
     query S intersect with
-    graph "data_base_1.txt";
+    graph "data_base_1.txt"
+where each edge
+    [
+        is labeled as "a" ||
+        is labeled as S
+    ];
 select
     edges
-which
-    [
-        are labeled as "a" ||
-        aren't finished in start vertices
-    ]
 from
     query ("c"? "a") named as S intersect with
-    graph "data_base_1.txt" with 0..2 start vertices;
+    graph "data_base_1.txt" where 0..2 are start vertices
+where each edge
+    [
+        is labeled as "a" ||
+        isn't finished in start vertices
+    ];
 select
     count of edges
-which
-    [
-        are labeled as "c" &&
-        aren't started in final vertices
-    ]
 from
     query S intersect with
-    graph "data_base_1.txt" with {1, 3} final vertices;
+    graph "data_base_1.txt" where {1, 3} are final vertices
+where each edge
+    [
+        is labeled as "c" &&
+        isn't started in final vertices
+    ];

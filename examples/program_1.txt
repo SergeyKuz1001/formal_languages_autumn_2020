@@ -1,1 +1,0 @@
-connect to "/data_bases/abc.db";
