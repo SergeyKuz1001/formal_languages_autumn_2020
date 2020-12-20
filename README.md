@@ -4,6 +4,71 @@
 
 Repository for hometasks of the cource "Formal Languages"
 
+## Task10
+
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FSergeyKuz1001%2Fformal_languages_autumn_2020%2Fbadge%3Fref%3Dtask10&style=flat)](https://actions-badge.atrox.dev/SergeyKuz1001/formal_languages_autumn_2020/goto?ref=task10)
+
+Tenth hometask of the cource "Formal Languages"
+
+### Common usage
+
+Firstly, you must build this project:
+
+```
+# ./make.sh
+```
+
+Now you can:
+
+  * Check if some text is correct program on this query language:
+
+      *
+        ```
+        # ./correct_prog.sh
+        ```
+
+      * Enter you program. When you finish, press `Ctrl-D`.
+
+      * If `echo $?` prints `0`, your program is correct.
+
+        You also can check code in file through typing file name after `./correct_prog.sh`.
+
+        You also can check that some text isn't program through using `./incorrect_prog.sh` instead.
+
+  * Execute program:
+
+    ```
+    # ./interpret.py
+    ```
+
+    You also can check code in file through typing file name after `./interpret.py`.
+
+### Usage through docker
+
+Building docker-container:
+
+```
+# docker build -t task10 .
+```
+
+Running docker-container:
+
+```
+# docker run -it --rm task10 <command from chapter above>
+```
+
+### Description
+
+`query_lang.g4` is grammar of this query language.
+
+`data_bases/` is directory with examples of databases.
+
+`tasks/` is directory with scripts of solved tasks.
+
+`tests/query_lang/` is directory with tests of query language interpreter.
+
+`tests/tasks/` is directory with tests of query language interpreter too.
+
 ## Task9
 
 [![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FSergeyKuz1001%2Fformal_languages_autumn_2020%2Fbadge%3Fref%3Dtask9&style=flat)](https://actions-badge.atrox.dev/SergeyKuz1001/formal_languages_autumn_2020/goto?ref=task9)
