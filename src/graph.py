@@ -92,8 +92,10 @@ class Graph:
 
     @classmethod
     def from_matrices(cls, matrices: Dict[Symbol, Matrix]) -> "Graph":
+        n = max([max(matrix.nrows, matrix.ncols) for matrix in matrices.values()])
+        for matrix in matrices.values():
+            matrix.resize(n, n)
         res = cls()
         res._matrices = matrices
-        res._count_Vs = max([max(matrix.nrows, matrix.ncols)
-                            for matrix in matrices.values()])
+        res._count_Vs = n
         return res
