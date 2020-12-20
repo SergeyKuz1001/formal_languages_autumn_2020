@@ -1,0 +1,7 @@
+[
+    "Please, choose database name. You can type:\n  * G1k-0.001\n  * G1k-0.01\n  * G1k-0.1\n  * G5k-0.001\n  * G5k-0.01\n  * G10k-0.001\n  * G10k-0.01",
+    "You've chosen ../data_bases/data_base_3.txt",
+    "Where are you?",
+    "You can go to this points:",
+    [0, 2, 4]
+]
