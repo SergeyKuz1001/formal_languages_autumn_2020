@@ -33,7 +33,7 @@ def list_to_set(l):
 
 @pytest.mark.parametrize('test_dir', TEST_DIRS)
 def test(test_dir):
-    result = interpret(os.path.join(test_dir, 'script.txt'))
+    result = interpret(os.path.join(test_dir, 'script.txt'), online = False)
     with open(os.path.join(test_dir, 'answer.json'), 'r') as answer_file:
         answer = list(map(list_to_set, json.load(answer_file)))
     assert result == answer

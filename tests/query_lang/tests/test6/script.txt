@@ -16,10 +16,10 @@ from
     graph "data_base_2.txt" intersect with
     query ["a" C] named as aC;
 select edges
-which (
-    are labeled as  C ||
-    are labeled as bC
-  )
 from
     query bC intersect with
-    graph "data_base_2.txt";
+    graph "data_base_2.txt"
+where each edge (
+    is labeled as  C ||
+    is labeled as bC
+  );
