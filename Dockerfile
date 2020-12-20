@@ -20,5 +20,7 @@ RUN cd /usr/local/lib;\
     wget https://www.antlr.org/download/antlr-4.9-complete.jar
 ENV CLASSPATH=".:/usr/local/lib/antlr-4.9-complete.jar:$CLASSPATH"
 WORKDIR /
+COPY download_database.sh .
+RUN ./download_database.sh
 COPY . .
-RUN java -jar /usr/local/lib/antlr-4.9-complete.jar -Dlanguage=Python3 -visitor query_lang.g4
+RUN ./build.sh
