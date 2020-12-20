@@ -1,0 +1,25 @@
+' Task 4 `
+
+connect to "MiniGDBEvalData";
+"Please, choose database name. You can type:
+  * G1k-0.001
+  * G1k-0.01
+  * G1k-0.1
+  * G5k-0.001
+  * G5k-0.01
+  * G10k-0.001
+  * G10k-0.01";
+ask string Graph_name;
+"You've chosen {Graph_name}.txt";
+
+Good -> ("F" | "W")* S;
+S -> "F" Good ("T" | "C") Good
+   | ("T" | "C") Good "F" Good
+   | $;
+
+"There is good path between this points:";
+select pairs
+from
+    graph "{Graph_name}.txt" intersect with
+    query Good
+where each edge is labeled as Good;

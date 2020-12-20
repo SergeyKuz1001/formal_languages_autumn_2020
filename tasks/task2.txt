@@ -1,0 +1,31 @@
+' Task 2 `
+
+connect to "MiniGDBEvalData";
+"Please, choose database name. You can type:
+  * G1k-0.001
+  * G1k-0.01
+  * G1k-0.1
+  * G5k-0.001
+  * G5k-0.01
+  * G10k-0.001
+  * G10k-0.01";
+ask string Graph_name;
+"You've chosen {Graph_name}.txt";
+
+"Where are you?";
+ask number ID_Point;
+
+"You can go to this points:";
+select final vertices
+from
+    (
+        graph "{Graph_name}.txt" where
+            {ID_Point} are start vertices
+    ) intersect with
+    query ["C" | "T"]* as S
+where each edge
+    (
+        is labeled as S &&
+        is started in start vertices &&
+        isn't finished in start vertices
+    );
